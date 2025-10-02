@@ -23,7 +23,7 @@ export default {
       products: [],
       allProducts: [
         { id: 1, category_id: 1, name: "آلة قهوة", price: 200, image: "../images/myStoreeLogo.png" },
-        { id: 2, category_id: 1, name: "مطحنة قهوة", price: 120, image: "https://th.bing.com/th/id/OIP.PAQO9Mc8B8bCYW4w55gw8QHaFS?w=255&h=183&c=7&r=0&o=5&pid=1.7" },
+        { id: 2, category_id: 1, name: "مطحنة قهوة", price: 120, image: "../images/myStoreLogo.png7" },
         { id: 3, category_id: 2, name: "رف مطبخ", price: 150, image: "https://th.bing.com/th/id/OIP._bSekl3N9LDqcHmVbrA2pAHaE8?w=280&h=187&c=7&r=0&o=7&pid=1.7&rm=3" },
         { id: 4, category_id: 3, name: "شامبو طبيعي", price: 50, image: "https://th.bing.com/th/id/OIP.DoM2axisQbL9bD7-5mPS2wHaKc?w=137&h=194&c=7&r=0&o=5&pid=1.7" },
       ]

@@ -11,13 +11,12 @@
         <p class="text-gray-600 mb-1">{{ product.price }} ر.س</p>
       </div>
       <div class="w-full m-0.5 bg-amber-50 rounded-lg  p-2 text-center font-semibold">
-        <button class=" bg-blue-600 text-white text-xs px-4 py-2 rounded-lg hover:bg-blue-700">
+        <button class="  bg-blue-600 text-white text-xs px-4 py-2 rounded-lg hover:bg-blue-700">
           إضافة إلى السلة
         </button>
       </div>
   </div>
 </template>
-
 <script>
 export default {
   props: {
