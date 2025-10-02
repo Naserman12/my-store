@@ -1,5 +1,5 @@
 <template>
-    <div class="p-6 bg-amber-100 max-w-4xl mx-auto">
+    <div class="p-6 bg-emerald-100 max-w-4xl mx-auto">
         <h1 class=" text-2xl font-bold mb-4 text-center">
             سلة التسوق
         </h1>
@@ -17,7 +17,7 @@
          <p v-else>السلة فارغة.</p>
 
          <!-- نموذج الدفع -->
-        <div class="mt-6 bg-amber-50 p-4 rounded shadow">
+        <div class="mt-6 bg-emerald-50 p-4 rounded shadow">
             <form @submit.prevent="checkout">
                 <h2 class="font-bold mb-2 text-2xl"> معلومات جهة الاتصال</h2>
                 <p class=" font-semibold text-sm text-gray-500"> سوف يتم التواصل معك من خلال هذا الايميل وارسال التحديثات</p>
@@ -36,7 +36,7 @@
                     <label class="block"><input type="radio" v-model="shipping.method" value="ourStore"> استلام من متجرنا (موصى به)</label>
                 </div>
                 <p class=" font-bold">الإجمالي: {{ cart.totalPrice }} ر.س</p>
-                <button type="submit" class="mt-4 bg-blue-500 text-amber-50 px-6 py-4 rounded-lg ">إتمام الطلب</button>
+                <button type="submit" class="mt-4 bg-emerald-600 hover:bg-emerald-700 text-amber-50 px-6 py-4 rounded-lg ">إتمام الطلب</button>
             </form>
         </div> 
     </div>

@@ -23,7 +23,7 @@
                 </div>
   </template>  -->
 <template>
-    <div class="bg-amber-50 text-gray-700 font-taja">
+    <div class="bg-emerald-50 text-gray-700 font-taja">
         <div class="container mx-auto px-4 p-6">
             <!-- شريط  التخفيضات -->
              <div class="bg-red-500 text-amber-50 py-2 px-4 rounded-t-lg mb-6 text-center">
@@ -32,7 +32,7 @@
                 </span>
              </div>
              <!-- محتوى المنتج  -->
-              <div class=" bg-amber-50 rounded-lg shadow-lg overflow-hidden">
+              <div class=" bg-emerald-50 rounded-lg shadow-lg overflow-hidden">
                 <div class=" flex flex-col md:flex-row">
                     <!-- صور المنتج -->
                      <div class="md:w-1/2 p-6 flex flex-col items-center">
@@ -52,7 +52,7 @@
                             @click="currnentImage = index" :class="['w-16 h-16 object-cover rounded cursor-pointer border',
                             currnentImage === index ?
                             'border-red-600': 
-                            'border-amber-100']">
+                            'border-emerald-100']">
                           </div>
                      </div>
                 </div>
@@ -70,51 +70,51 @@
                          <h2 class=" text-lg font-semibold mb-3 text-gray-700">ميزات المنتج:</h2>
                          <ul class=" space-y-2">
                             <li v-for="(feature, index) in product.features" :key="index" class="flex items-end">
-                                <i class="fas fa-check text-green-500 mt-1 ml-2"></i>
+                                <i class="fas fa-check text-emerald-600 mt-1 ml-2"></i>
                                 <span>{{ feature }}</span>
                             </li>
                          </ul>
                      </div>
                      <!-- التحكم بالكمية واضافة للسلة -->
-                      <div class="flex flex-col justify-between mb-6 p-4 bg-amber-50 rounded-lg">
+                      <div class="flex flex-col justify-between mb-6 p-4 bg-emerald-50 rounded-lg">
                         <div class="flex items-center mb-4 sm:mb-0">
                             <span class=" font-semibold ml-3">الكمية:</span>
                             <div class="flex items-center border border-amber-50 rounded-md overflow-hidden bg-white">
-                                <button @click="decreaseQuantity" class=" px-3 py-1 bg-amber-50 hover:bg-amber-100 transition-colors" >
+                                <button @click="decreaseQuantity" class=" px-3 py-1 bg-emerald-100 hover:bg-emerald-000 transition-colors" >
                                     <i class="fas fa-minus">-</i>
                                 </button>
                                 <span class="px-4 py-2 w-12 text-center">{{ quantity }}</span>
-                                <button @click="increaseQuantity" class=" px-3 py-1 bg-amber-50 hover:bg-amber-100 transition-colors">
+                                <button @click="increaseQuantity" class=" px-3 py-1 bg-emerald-100 hover:bg-emerald-200 transition-colors">
                                     <i class="fas fa-blus">+</i>
                                 </button>
                             </div>
                         </div>
-                        <button @click="addToCart" class=" bg-blue-500 hover:bg-blue-600 text-amber-50 font-semibold py-3 px-6 rounded-lg flex items-center transition-colors shadow-md">
+                        <button @click="addToCart" class=" mt-2 bg-emerald-500 hover:bg-emerald-600 text-amber-50 font-semibold py-3 px-6 rounded-lg flex items-center transition-colors shadow-md">
                             <i class="fas fa-shopping-cart ml-2"></i>
                             إضافة الى السلة
                         </button>
                       </div>
                       <!-- طرق الدفع -->
-                       <div class=" border-t border-amber-100 pt-6">
+                       <div class=" border-t border-emerald-100 pt-6">
                         <h3 class=" text-lg font-semibold mb-3 text-gray-700">طرق الدفع المدعومة</h3>
                         <div class="flex flex-wrap gap-4">
-                            <div class=" bg-amber-50 p-2 rounded border border-amber-100 shadow-sm">
+                            <div class=" bg-emerald-50 p-2 rounded border border-emerald-100 shadow-sm">
                                 <i class="fas fa-cc-visa">Visa</i>
                             </div>
-                            <div class=" bg-amber-50 p-2 rounded border border-amber-100 shadow-sm">
+                            <div class=" bg-emerald-50 p-2 rounded border border-emerald-100 shadow-sm">
                                 <i class="fas fa-cc-mastercard">mastercard</i>
                             </div>
-                            <div class=" bg-amber-50 p-2 rounded border border-amber-100 shadow-sm">
+                            <div class=" bg-emerald-50 p-2 rounded border border-emerald-100 shadow-sm">
                                 <i class="fas fa-cc-amex">Amex</i>
                             </div>
-                            <div class=" bg-amber-50 p-2 rounded border border-amber-100 shadow-sm">
+                            <div class=" bg-emerald-50 p-2 rounded border border-emerald-100 shadow-sm">
                                 <i class="fas fa-cc-mada">Mada</i>
                             </div>
-                            <div class=" bg-amber-50 p-2 rounded border border-amber-100 shadow-sm">
+                            <div class=" bg-emerald-50 p-2 rounded border border-emerald-100 shadow-sm">
                                 <i class="fas fa-cc-discover">Discover</i>
                             </div>
                         </div>
-                        <p class=" text-sm text-amber-600 mt-3 font-medium ">Guaranteed safe Checkout </p>
+                        <p class=" text-sm text-emerald-600 mt-3 font-medium ">Guaranteed safe Checkout </p>
                        </div>
                  </div>
               </div>

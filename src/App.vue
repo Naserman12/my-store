@@ -1,5 +1,5 @@
 <template>
- <div dir="rtl" class=" bg-blue-100">
+ <div dir="rtl" class=" bg-emerald-50">
     <navbar/>
     <router-view /> 
     <WhatsAppButton/>
