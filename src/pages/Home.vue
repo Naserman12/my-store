@@ -16,17 +16,12 @@
 
 <script>
 import CategoryCard from "../components/CategoryCard.vue";
-
+import { products, categories } from "../assets/data/productsApi";
 export default {
   components: { CategoryCard },
   data() {
     return {
-      categories: [
-        { id: 1, name: "أدوات القهوة", image: "/images/myStoreLogo.png" },
-        { id: 2, name: "أدوات المطبخ", image: "/images/myStoreLogo.png" },
-        { id: 3, name: "منتجات العناية", image: "/images/myStoreLogo.png" },
-        { id: 4, name: "منتجات المنزل", image: "/images/myStoreLogo.png" },
-      ]
+      categories: categories,
     };
   },
 };

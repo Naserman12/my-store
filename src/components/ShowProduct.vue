@@ -39,10 +39,10 @@
                         <div class="w-full max-w-md relative">
                             <img :src="currnentImage" alt="صور المنتج" class="h-auto rounded-lg  shadow-md">
                             <!-- التنقل بين الصور -->
-                             <button @click="prevImage" class="absolute top-1/2 left-0 -translate-y-1/2 bg-gray-700 text-amber-50 p-2 rounded-full">
+                             <button @click="prevImage" class="absolute top-1/2 left-0 -translate-y-1/2 bg-emerald-700 text-amber-50 p-2 rounded-full">
                                 <
                              </button>
-                             <button @click="nextImage" class="absolute top-1/2 right-0 -translate-y-1/2 bg-gray-700 text-amber-50 p-2 rounded-full">
+                             <button @click="nextImage" class="absolute top-1/2 right-0 -translate-y-1/2 bg-emerald-700 text-amber-50 p-2 rounded-full">
                                 >
                              </button>
                         </div>
@@ -51,7 +51,7 @@
                             <img v-for="(img, index) in images" :key="index" :src="img"
                             @click="currnentImage = index" :class="['w-16 h-16 object-cover rounded cursor-pointer border',
                             currnentImage === index ?
-                            'border-red-600': 
+                            'border-emerald-600': 
                             'border-emerald-100']">
                           </div>
                      </div>
@@ -127,12 +127,7 @@
 </template>
   <script>
   import { useCartStore } from '../stores/cart';
-//   const cart = useCartStore();
-
-//   const addToCart = () => {
-//                     cart.addToCart(product)
-//                     alert("تمت إضافة المنتج إلى السلة!");
-//                 }
+  import { products, categories } from '../assets/data/productsApi';
 export default {
             data() {
                 return {
@@ -149,12 +144,8 @@ export default {
             },
             created() {
                 const id = parseInt(this.$route.params.id);
-                const products = [
-                    { id: 1,category: "العناية", name: "قالب ثلج متعدد الاستخدامات", oldPrice: 176.99, price: 151.99, image: "../images/myStoreLogo.png", features: ["سهولة الاستخدام", "تصميم أنيق", "بدون BPA", "متوافق مع جميع الأنواع"] },
-                    { id: 2,category: "السفر", name: "حقيبة سفر عملية", oldPrice: 172.49, price: 149.99, image: "../images/myStoreLogo.png", features: ["سهولة الحمل", "متينة", "تصميم عصري"] },
-                    { id: 3,category: "ادوات المطبخ", name: "زجاجة ماء ذكية", oldPrice: 120.00, price: 99.99, image: "../images/myStoreLogo.png", features: ["صديقة للبيئة", "سهلة التنظيف"] }
-                ];
-                this.product = products.find(p => p.id === id);
+                const productsAll = products;
+                this.product = productsAll.find(p => p.id === id);
             },
             computed:{
                 cart(){
@@ -185,9 +176,11 @@ export default {
                     }
                 },            
                 addToCart(){
+                    this.product.quantity = this.quantity;
                     this.cart.addToCart(this.product);
                       alert("تمت إضافة المنتج إلى السلة!");
-                    console.log('done')
+                    console.log(this.quantity);
+                    this.$router.push('/cart');
                 }
             },
         };

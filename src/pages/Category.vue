@@ -3,9 +3,9 @@
   <div class="p-4">
     <h2 class="text-2xl font-bold mb-4">{{ categoryName }}</h2>
 
-    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
       <ProductCard
-        v-for="product in products"
+        v-for="product in filterProducts"
         :key="product.id"
         :product="product"
       />
@@ -14,37 +14,22 @@
 </template>
 
 <script>
+import { categories, products } from "../assets/data/productsApi";
 import ProductCard from "../components/ProductCard.vue";
 
 export default {
   components: { ProductCard },
-  data() {
-    return {
-      products: [],
-      allProducts: [
-        { id: 1, category_id: 1, name: "آلة قهوة", price: 200, image: "../images/myStoreeLogo.png" },
-        { id: 2, category_id: 1, name: "مطحنة قهوة", price: 120, image: "../images/myStoreLogo.png7" },
-        { id: 3, category_id: 2, name: "رف مطبخ", price: 150, image: "https://th.bing.com/th/id/OIP._bSekl3N9LDqcHmVbrA2pAHaE8?w=280&h=187&c=7&r=0&o=7&pid=1.7&rm=3" },
-        { id: 4, category_id: 3, name: "شامبو طبيعي", price: 50, image: "https://th.bing.com/th/id/OIP.DoM2axisQbL9bD7-5mPS2wHaKc?w=137&h=194&c=7&r=0&o=5&pid=1.7" },
-      ]
-    };
-  },
   computed: {
     categoryId() {
       return parseInt(this.$route.params.id);
     },
     categoryName() {
-      const categoryNames = {
-        1: "أدوات القهوة",
-        2: "أدوات المطبخ",
-        3: "منتجات العناية",
-        4: "منتجات المنزل",
-      };
-      return categoryNames[this.categoryId] || "منتجات";
-    }
+       const category = categories.find(c => c.id === this.categoryId);
+       return  category ? category.name : 'غير معروف';
+      },
+      filterProducts(){
+        return products.filter(p => p.categories.includes(this.categoryId));
+      },
   },
-  created() {
-    this.products = this.allProducts.filter(p => p.category_id === this.categoryId);
-  }
 };
 </script>

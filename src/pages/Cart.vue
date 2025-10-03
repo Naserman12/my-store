@@ -4,18 +4,20 @@
             سلة التسوق
         </h1>
         <!-- قائمة المنتجات -->
-         <div v-if="cart.items.length" class="">
-            <div v-for="item in cart.items" :key="item.id" class="flex justify-between border-b py-3">
-                <div class="">
-                    <p class=" font-semibold">{{ item.name }}</p>
+         <div v-if="cart.length" class=" text-3xl font-bold mb-4 text-center">
+            <div v-for="item in cart" :key="item.id" class="flex justify-between border-b py-3">
+                <div class=" text-right">
+                    <p class=" font-semibold mb-2">{{ item.name }}</p>
                     <p class=" text-amber-500">الكمية: {{ item.quantity }}</p>
-                    <p class="text-amber-500">السعر: {{ item.price * item.quantity }} ر.س</p>
+                    <p class="text-amber-500">الاسعر الاساسي: {{ item.oldPrice }} ر.س</p>
+                    <p class="text-amber-500">الخصم: {{ item.discount }}% ر.س</p>
+                    <p class="text-amber-500">السعر: {{ item.newPrice }} ر.س</p>
                 </div>
                 <button @click="cart.removeFromCart" class=" text-red-700 hover:underline">حذف</button>
             </div>
+            <p class="text-amber-500">الإجمالي: {{ totalPrice }} ر.س</p>
          </div>
          <p v-else>السلة فارغة.</p>
-
          <!-- نموذج الدفع -->
         <div class="mt-6 bg-emerald-50 p-4 rounded shadow">
             <form @submit.prevent="checkout">
@@ -39,16 +41,50 @@
                 <button type="submit" class="mt-4 bg-emerald-600 hover:bg-emerald-700 text-amber-50 px-6 py-4 rounded-lg ">إتمام الطلب</button>
             </form>
         </div> 
+            <!-- طرق الدفع -->
+                       <div class=" border-t border-emerald-100 pt-6">
+                        <h3 class=" text-lg font-semibold mb-3 text-gray-700">طرق الدفع المدعومة</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <div class=" bg-emerald-50 p-2 rounded border border-emerald-100 shadow-sm">
+                                <i class="fas fa-cc-visa">Visa</i>
+                            </div>
+                            <div class=" bg-emerald-50 p-2 rounded border border-emerald-100 shadow-sm">
+                                <i class="fas fa-cc-mastercard">mastercard</i>
+                            </div>
+                            <div class=" bg-emerald-50 p-2 rounded border border-emerald-100 shadow-sm">
+                                <i class="fas fa-cc-amex">Amex</i>
+                            </div>
+                            <div class=" bg-emerald-50 p-2 rounded border border-emerald-100 shadow-sm">
+                                <i class="fas fa-cc-mada">Mada</i>
+                            </div>
+                            <div class=" bg-emerald-50 p-2 rounded border border-emerald-100 shadow-sm">
+                                <i class="fas fa-cc-discover">Discover</i>
+                            </div>
+                        </div>
+                        <p class=" text-sm text-emerald-600 mt-3 font-medium ">Guaranteed safe Checkout </p>
+                       </div>
     </div>
 </template>
 
+<script setup>
+        import { useCartStore } from '../stores/cart';
+        import { computed } from 'vue';
+        const cartStore = useCartStore();
+        const cart = computed(()=> cartStore.cart)
+        const totalPrice = computed(()=> cartStore.cart.reduce((sum, item) => sum + item.oldPrice * item.quantity, 0 ))
+        const shipping = ref({
+            address: "",
+            email: "",
+            coupon: "",
+            method: "free"
+        });
+</script>
+
 <script>
-import { useCartStore } from '../stores/cart';
 import {ref} from 'vue'
 
 export default{
     setup(){
-        const cart = useCartStore();
         const shipping = ref({
             address: "",
             email: "",
@@ -59,6 +95,7 @@ export default{
             console.log('طلب جديد: ', {items: cart.items, shipping: shipping.value });
             alert("تم إرسال طلبك بنجاح");
             cart.clearCart
+            
         };
         return {cart, shipping, checkout}
     }
