@@ -1,40 +1,47 @@
 import { defineStore } from "pinia";
+import { ref, watch } from "vue";
 
 export const useCartStore = 
-    defineStore("cart", {
-    state:  () => ({
-        // items: [],
-        cart: (() => {
-            try {
-               return caJSON.parse(localStorage.getItem('cart')) || []   
-            } catch (error) {
-                return []
-            }
-        })()
-    }),
-    actions: {
-        addToCart(product){
-            const existing = this.cart.find(i => i.id === product.id);
+    defineStore("cart", () => {
+       const cart = ref(JSON.parse(localStorage.getItem('cart')) || '[]') 
+      function  addToCart(product){
+            const existing = cart.value.find(i => i.id === product.id);
             if (existing) {
                 existing.quantity = product.quantity || 1
             }else{
-                this.cart.push({
+                cart.value.push({
                     ...product,
                     quantity: product.quantity || 1
                 });
             }
-            this.saveCart()
-        },
-        removeFromCart(id){
-            this.cart = this.cart.filter(i => i.id !== id);
-        },
-        clearCart(){
-            this.cart = [];
-            this.saveCart()
-        },
+            saveCart()
+           console.log('Saved', cart)
+        }
+       function removeFromCart(id){
+            cart = cart.filter(i => i.id !== id);
+        }
+        function clearCart(){
+            cart.value = []; 
+        }
         // حفظ السلة في local Storage
-        saveCart() {
-            localStorage.setItem('cart', JSON.stringify(this.cart))
-        },
-    },
+        function saveCart() {
+            localStorage.setItem('cart', JSON.stringify(cart.value))
+        }
+        function increaseQuantity(id){
+             const item = cart.value.find(item => item.id === id)
+             if (item) {
+                 item.quantity++
+                 saveCart()
+                 console.log('++', item)
+                }
+            }
+        function decreaseQuantity(id){
+            const item = cart.value.find(item => item.id === id)
+            if (item && item.quantity> 1) {
+                item.quantity--
+                saveCart()
+                console.log('-- ', item)
+            }
+                }
+        return {cart, addToCart, increaseQuantity, decreaseQuantity, clearCart}
 });

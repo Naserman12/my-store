@@ -1,20 +1,20 @@
 // import { Features } from "tailwindcss"
 
 export const categories = [
-    {id: 1, name: "أدوات القهوة", image: ""},
-    {id: 2, name: "أدوات المطبخ", image: ""},
-    {id: 3, name: "العناية", image: ""},
-    {id: 4, name: "الكترونيات", image: ""},
-    {id: 5, name: "أثاث", image: ""},
-    {id: 6, name: "كتب", image: ""},
-    {id: 7, name: "أزياء", image: ""},
-    {id: 8, name: "العاب", image: ""},
+    {id: 1, name: "أدوات القهوة", image: "", icon: "/storeIcon"},
+    {id: 2, name: "أدوات المطبخ", image: "", icon: "/storeIcon"},
+    {id: 3, name: "العناية", image: "", icon: "/storeIcon"},
+    {id: 4, name: "الكترونيات", image: "", icon: "/storeIcon"},
+    {id: 5, name: "أثاث", image: "", icon: "/storeIcon"},
+    {id: 6, name: "كتب", image: "", icon: "/storeIcon"},
+    {id: 7, name: "أزياء", image: "", icon: "/storeIcon"},
+    {id: 8, name: "العاب", image: "",icon: "/storeIcon"},
 ];
 
 // src/data/products.js
 
 export const products = [
-// ======= إلكترونيات )======= (٦
+// إلكترونيات  (٦
 {
 id: 1,
 name: " Galaxy X20 جوال", 
@@ -379,4 +379,5 @@ newPrice: 3325,
 images: ["/images/products/ps5.png"],
  features: ["تيرا 1", "يد تحكم مزدوجة",]
 },
+
 ];

@@ -1,5 +1,5 @@
 import  { ref, onMounted } from "vue";
-const darkMode = ref(true);
+const darkMode = ref(false);
 
 // استرجاع المود عند تحميل الصفحة
 // onMounted(() => {

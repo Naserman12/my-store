@@ -1,5 +1,5 @@
 <template>
-    <div class="p-6 bg-emerald-100 max-w-4xl mx-auto">
+    <div class="p-6 max-w-4xl mx-auto">
         <h1 class=" text-2xl font-bold mb-4 text-center">
             سلة التسوق
         </h1>
@@ -8,18 +8,34 @@
             <div v-for="item in cart" :key="item.id" class="flex justify-between border-b py-3">
                 <div class=" text-right">
                     <p class=" font-semibold mb-2">{{ item.name }}</p>
-                    <p class=" text-amber-500">الكمية: {{ item.quantity }}</p>
-                    <p class="text-amber-500">الاسعر الاساسي: {{ item.oldPrice }} ر.س</p>
-                    <p class="text-amber-500">الخصم: {{ item.discount }}% ر.س</p>
-                    <p class="text-amber-500">السعر: {{ item.newPrice }} ر.س</p>
+                    <p class=" text-gray-700">الكمية: {{ item.quantity }}</p>
+                    <p class="text-gray-700">الاسعر الاساسي: {{ item.oldPrice }} ر.س</p>
+                    <p class="text-gray-700">الخصم: {{ item.discount }}% ر.س</p>
+                    <p class="text-gray-700">السعر: {{ item.newPrice }} ر.س</p>
+                     <!-- التحكم بالكمية واضافة للسلة -->
+                      <div class="flex flex-col justify-between mb-6 p-4 rounded-lg">
+                        <div class="flex items-center mb-4 sm:mb-0">
+                            <span class=" font-semibold ml-3">الكمية:</span>
+                            <div class="flex items-center border border-amber-50 rounded-md overflow-hidden bg-white">
+                                <button @click="cartStore.decreaseQuantity(item.id)" class=" px-3 py-1 bg-emerald-100 hover:text-amber-50 hover:bg-red-600 transition-colors" >
+                                    <i class="fas fa-minus">-</i>
+                                </button>
+                                <span class="px-4 py-2 w-12 text-center">{{ item.quantity }}</span>
+                                <button @click="cartStore.increaseQuantity(item.id)" class=" px-3 py-1 bg-emerald-100 hover:bg-emerald-700 hover:text-amber-50 transition-colors">
+                                    <i class="fas fa-blus">+</i>
+                                </button>
+                            </div>
+                            <button @click="cart.removeFromCart" class=" text-red-700 hover:underline">حذف</button>
+                        </div>
+                    </div>
                 </div>
-                <button @click="cart.removeFromCart" class=" text-red-700 hover:underline">حذف</button>
             </div>
-            <p class="text-amber-500">الإجمالي: {{ totalPrice }} ر.س</p>
+            <button @click="goBack" type="submit" class="mt-4 bg-gray-600 hover:bg-gray-700 m-2 text-amber-50 px-3 py-1.5 rounded-lg "> اكمل التسوق</button>
+            <p class="text-gray-700">الإجمالي: {{ totalPrice }} ر.س</p>
          </div>
          <p v-else>السلة فارغة.</p>
          <!-- نموذج الدفع -->
-        <div class="mt-6 bg-emerald-50 p-4 rounded shadow">
+        <div class="mt-6 p-4 rounded shadow">
             <form @submit.prevent="checkout">
                 <h2 class="font-bold mb-2 text-2xl"> معلومات جهة الاتصال</h2>
                 <p class=" font-semibold text-sm text-gray-500"> سوف يتم التواصل معك من خلال هذا الايميل وارسال التحديثات</p>
@@ -37,8 +53,8 @@
                     <label class="block"><input type="radio" v-model="shipping.method" value="store"> استلام من متجر معتمد </label>
                     <label class="block"><input type="radio" v-model="shipping.method" value="ourStore"> استلام من متجرنا (موصى به)</label>
                 </div>
-                <p class=" font-bold">الإجمالي: {{ cart.totalPrice }} ر.س</p>
-                <button type="submit" class="mt-4 bg-emerald-600 hover:bg-emerald-700 text-amber-50 px-6 py-4 rounded-lg ">إتمام الطلب</button>
+                <p class=" font-bold">الإجمالي: {{ totalPrice }} ر.س</p>
+                <button type="submit" class="mt-4 bg-emerald-600 hover:bg-emerald-700 text-amber-50 px-4 py-2 rounded-lg ">إتمام الطلب</button>
             </form>
         </div> 
             <!-- طرق الدفع -->
@@ -69,22 +85,14 @@
 <script setup>
         import { useCartStore } from '../stores/cart';
         import { computed } from 'vue';
+        import {ref} from 'vue';
+        import { useRouter } from 'vue-router';
+        import { useDarkMode } from '../components/useDarkMode';
+        const {darkMode, toggleMode} = useDarkMode;
         const cartStore = useCartStore();
+        const router = useRouter();
         const cart = computed(()=> cartStore.cart)
-        const totalPrice = computed(()=> cartStore.cart.reduce((sum, item) => sum + item.oldPrice * item.quantity, 0 ))
-        const shipping = ref({
-            address: "",
-            email: "",
-            coupon: "",
-            method: "free"
-        });
-</script>
-
-<script>
-import {ref} from 'vue'
-
-export default{
-    setup(){
+        const totalPrice = computed(()=> cartStore.cart.reduce((sum, item) => sum + item.newPrice * item.quantity, 0 ))
         const shipping = ref({
             address: "",
             email: "",
@@ -95,9 +103,9 @@ export default{
             console.log('طلب جديد: ', {items: cart.items, shipping: shipping.value });
             alert("تم إرسال طلبك بنجاح");
             cart.clearCart
-            
+            return {cart, shipping, checkout}
         };
-        return {cart, shipping, checkout}
-    }
-}
+       function goBack(){
+        router.go(-1);  // الرجوع للصفحة السابقة
+       }
 </script>
