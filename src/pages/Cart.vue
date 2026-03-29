@@ -21,11 +21,11 @@
                                     <i class="fas fa-minus">-</i>
                                 </button>
                                 <span class="px-4 py-2 w-12 text-center">{{ item.quantity }}</span>
-                                <button @click="cartStore.increaseQuantity(item.id)" class=" px-3 py-1 bg-emerald-100 hover:bg-emerald-700 hover:text-amber-50 transition-colors">
-                                    <i class="fas fa-blus">+</i>
+                                <button @click="cartStore.increaseQuantity(item.id)" class="px-3 py-1 bg-emerald-100 hover:bg-emerald-700 hover:text-amber-50 transition-colors">
+                                    <i class="fas fa-plus"></i>
                                 </button>
                             </div>
-                            <button @click="cart.removeFromCart" class=" text-red-700 hover:underline">حذف</button>
+                            <button @click="handleDelete(item.id)" class="text-red-700 hover:underline">حذف</button>
                         </div>
                     </div>
                 </div>
@@ -40,12 +40,12 @@
                 <h2 class="font-bold mb-2 text-2xl"> معلومات جهة الاتصال</h2>
                 <p class=" font-semibold text-sm text-gray-500"> سوف يتم التواصل معك من خلال هذا الايميل وارسال التحديثات</p>
                 <label class="block mb-2">الإيميل:</label>
-                <input v-model="shipping.address" type="email" class="w-full border p-2 rounded mb-3" required />
+                <input v-model="shipping.email" type="email" class="w-full border p-2 rounded mb-3" required />
                 <h2 class=" font-bold mb-3 text-xl">معلومات الشحن</h2>
                 <label class="block mb-2">العنوان:</label>
                 <input v-model="shipping.address" type="text" class="w-full border p-2 rounded mb-3" required />
                 <label class="block mb-2">القسيمة (إختياري):</label>
-                <input v-model="shipping.address" type="text" class="w-full border p-2 rounded mb-3" required />
+                <input v-model="shipping.coupon" type="text" class="w-full border p-2 rounded mb-3" />
                 <h3 class=" font-bold mb-2">خيارات الشحن</h3>
                 <div class="mb-3 space-y-2">
                     <label class="block"><input type="radio" v-model="shipping.method" value="free"> 3-5 أيام عمل شحن مجاني</label>
@@ -88,7 +88,7 @@
         import {ref} from 'vue';
         import { useRouter } from 'vue-router';
         import { useDarkMode } from '../components/useDarkMode';
-        const {darkMode, toggleMode} = useDarkMode;
+        const {darkMode, toggleMode} = useDarkMode();
         const cartStore = useCartStore();
         const router = useRouter();
         const cart = computed(()=> cartStore.cart)
@@ -102,9 +102,16 @@
         const checkout = () => {
             console.log('طلب جديد: ', {items: cart.items, shipping: shipping.value });
             alert("تم إرسال طلبك بنجاح");
-            cart.clearCart
+            cartStore.clearCart();
             return {cart, shipping, checkout}
         };
+        function handleDelete(id) {
+            if (typeof cartStore.confirmDelete === 'function') {
+                cartStore.confirmDelete(id);
+                return;
+            }
+            cartStore.removeFromCart(id);
+        }
        function goBack(){
         router.go(-1);  // الرجوع للصفحة السابقة
        }

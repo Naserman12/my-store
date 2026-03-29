@@ -18,8 +18,8 @@
              <h3 class=" font-semibold">{{ product.name }}</h3>
              <p class="">{{ product.newPrice }} ر.س</p>
              <div class=" mt-2 flex justify-center gap-2">
-              <button :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-2 py-1 rounded-b-lg">عرض</button>
-              <button :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-2 py-1 rounded-b-lg">إضافة</button>
+              <button @click="goToDetails(product.id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-2 py-1 rounded-b-lg">عرض</button>
+              <button @click="addToCart(product.id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-2 py-1 rounded-b-lg">إضافة</button>
              </div>
           </div>
         </div>
@@ -33,8 +33,8 @@
               <h3 class=" font-semibold">{{ product.name }}</h3>
               <p class="m-2">{{ product.newPrice }} ر.س </p>
               <div class=" mt-2 flex justify-center gap-2">
-              <button :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-2 py-1 rounded-b-lg">عرض</button>
-              <button :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-2 py-1 rounded-b-lg">إضافة</button>
+              <button @click="goToDetails(product.id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-2 py-1 rounded-b-lg">عرض</button>
+              <button @click="addToCart(product.id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-2 py-1 rounded-b-lg">إضافة</button>
              </div>
           </div>
         </div>
@@ -43,16 +43,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted} from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useCartStore } from '../stores/cart';
 import { useDarkMode } from "../components/useDarkMode";
-const {darkMode, toggleMode} = useDarkMode();
+const { darkMode, toggleMode } = useDarkMode();
 import ScrollReveal from 'scrollreveal';
 import { products, categories } from "../assets/data/productsApi";
 import CategotiesWithProducts from "../components/CategotiesWithProducts.vue";
+import { showAddToCartSuccess } from '../utils/notifications';
 
-const bestSelling = ref([])
-const latestProducts = ref([])
-const firstCategories = ref([])
+const router = useRouter();
+const cart = useCartStore();
+const bestSelling = ref([]);
+const latestProducts = ref([]);
+const firstCategories = ref([]);
 const sr = ScrollReveal();
 
 // صور السلايدر
@@ -62,13 +67,24 @@ const sliderImages =[
   "../images/GARY.png",
 ]
 
-const currentSlide = ref([])
+const currentSlide = ref(0)
+
+function goToDetails(id) {
+  router.push({ name: "product", params: { id } });
+}
+
+function addToCart(productId) {
+  const product = products.find((p) => p.id === productId);
+  if (!product) return;
+
+  cart.addToCart({ ...product, quantity: 1 });
+  showAddToCartSuccess();
+}
 
 onMounted(() =>{
   // تغير الصورة كل ثلاث ثواني
   setInterval(() => {
-    currentSlide.value = (currentSlide.value + 1)%
-    sliderImages.length
+    currentSlide.value = (currentSlide.value + 1) % sliderImages.length;
   }, 3000)
 
   // تحديد الاكثر مبيعا

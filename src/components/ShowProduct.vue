@@ -16,10 +16,10 @@
                             <img :src="currnentImage" alt="صور المنتج" class="h-auto rounded-lg  shadow-md">
                             <!-- التنقل بين الصور -->
                              <button @click="prevImage" class="absolute top-1/2 left-0 -translate-y-1/2 bg-emerald-700 text-amber-50 p-2 rounded-full">
-                                <
+                                &lt;
                              </button>
                              <button @click="nextImage" class="absolute top-1/2 right-0 -translate-y-1/2 bg-emerald-700 text-amber-50 p-2 rounded-full">
-                                >
+                                &gt;
                              </button>
                         </div>
                         <!-- الصور المصغرة -->
@@ -127,6 +127,7 @@ const {darkMode, toggleMode} = useDarkMode();
   <script>
   import { useCartStore } from '../stores/cart';
   import { products, categories } from '../assets/data/productsApi';
+  import { showAddToCartSuccess } from '../utils/notifications';
   export default {
             data() {
                 return {
@@ -177,7 +178,7 @@ const {darkMode, toggleMode} = useDarkMode();
                 addToCart(){
                     this.product.quantity = this.quantity;
                     this.cart.addToCart(this.product);
-                      alert("تمت إضافة المنتج إلى السلة!");
+                    showAddToCartSuccess();
                     console.log(this.quantity);
                     this.$router.push('/cart');
                 }

@@ -4,13 +4,13 @@
             <div class=" contener mx-auto px-4 py-3 flex items-center justify-between">
                 <!-- روابط التنقل -->
                 <ul class="hidden md:flex items-center gap-6 font-medium ">
-                    <li><router-link active-class="underline underline-offset-4" to="/" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'" exact>الرئيسية</router-link></li>
-                    <li><router-link active-class="underline underline-offset-4" to="/cart" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'">السلة</router-link></li>
-                    <li><router-link active-class="underline underline-offset-4" to="/categories" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'">التصنيفات</router-link></li>
+                    <li><router-link active-class="underline underline-offset-4" to="/" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500 '" class="fas fa-home ml-3" exact></router-link></li>
+                    <li><router-link active-class="underline underline-offset-4" to="/cart" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="fas fa-cart-plus ml-3"></router-link></li>
+                    <!-- <li><router-link active-class="underline underline-offset-4" to="/categories" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="fas fa-tasks ml-3">1</router-link></li> -->
 
                     <!-- التصنيفات قائمة منسدلة -->
                      <li class=" relative group">
-                        <button :class="darkMode ? 'hover:bg-emerald-800' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="  flex items-center gap-1">التصنيفات <i class="fas fa-chevron-down text-sm text-amber-50"></i>
+                        <button :class="darkMode ? 'hover:bg-emerald-800' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="flex items-center gap-1"> <i class="fas fa-chevron-down fas fa-tasks  text-sm text-amber-50"></i>
                         </button>
                         <!-- القائمة النسدلة -->
                          <ul class=" absolute right-0 mt-2 w-48 bg-emerald-400 border rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-2 transition-all">
@@ -84,7 +84,7 @@
                                 <li class=" border-b border-amber-50 mb-3"><a class=" hover:bg-gray-400"  href="/">
                                      <div class=" items-center flex">
                                         <i class="fas fa-home ml-3">
-                                            <span>الرئيسية</span>
+                                            <span>الرائيسية</span>
                                         </i>
                                     </div>
                                 </a></li>

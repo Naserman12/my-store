@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
-import { ref, watch } from "vue";
+import { ref } from "vue";
+import Swal from "sweetalert2";
 
 export const useCartStore = 
     defineStore("cart", () => {
-       const cart = ref(JSON.parse(localStorage.getItem('cart')) || '[]') 
+       const cart = ref(JSON.parse(localStorage.getItem('cart') || '[]')) 
       function  addToCart(product){
             const existing = cart.value.find(i => i.id === product.id);
             if (existing) {
@@ -18,10 +19,29 @@ export const useCartStore =
            console.log('Saved', cart)
         }
        function removeFromCart(id){
-            cart = cart.filter(i => i.id !== id);
+            cart.value = cart.value.filter(i => i.id !== id);
+            saveCart();
+        }
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'هل أنت متأكد؟',
+                text: 'سيتم حذف المنتج من السلة',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'نعم، احذف',
+                cancelButtonText: 'إلغاء',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    removeFromCart(id);
+                    Swal.fire('تم الحذف', 'تم حذف المنتج من السلة', 'success');
+                }
+            });
         }
         function clearCart(){
-            cart.value = []; 
+            cart.value = [];
+            saveCart();
         }
         // حفظ السلة في local Storage
         function saveCart() {
@@ -43,5 +63,5 @@ export const useCartStore =
                 console.log('-- ', item)
             }
                 }
-        return {cart, addToCart, increaseQuantity, decreaseQuantity, clearCart}
+        return {cart, addToCart, increaseQuantity, decreaseQuantity, clearCart, removeFromCart, confirmDelete}
 });

@@ -1,11 +1,23 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useCartStore } from '../stores/cart';
 import { categories, products } from '../assets/data/productsApi';
 import { useDarkMode } from "../components/useDarkMode";
+import { showAddToCartSuccess } from '../utils/notifications';
 const {darkMode, toggleMode} = useDarkMode();
+const router = useRouter();
+const cart = useCartStore();
 const selectedCategory = ref(null)
 const selectCategory =  (cat) => {
     selectedCategory.value = cat
+}
+
+function addToCart(product) {
+    if (!product) return;
+    cart.addToCart({ ...product, quantity: 1 });
+    showAddToCartSuccess();
+    router.push('/cart');
 }
 // جلب المنتجات على حسب التصنيف
 const previewProducts = computed(() => {
@@ -42,7 +54,7 @@ onMounted(() => {
                     <img src="../images/myStoreDark.png" class=" h-24 mx-auto mb-4 object-contain" alt="">
                     <h3 class=" text-sm font-semibold">{{ product.name }}</h3>
                     <p class=" text-sm ">{{ product.newPrice }} ر.س</p>
-                    <button :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-3 py-1 rounded-b-lg"> إضافة إلى السلة</button>
+                    <button @click="addToCart(product)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-3 py-1 rounded-b-lg"> إضافة إلى السلة</button>
                 </div>
             </div>
             <!-- عرض المزيد -->
