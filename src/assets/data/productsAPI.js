@@ -1,5 +1,6 @@
 // import { Features } from "tailwindcss"
 
+
 export const categories = [
     {id: 1, name: "أدوات القهوة", image: "", icon: "/storeIcon"},
     {id: 2, name: "أدوات المطبخ", image: "", icon: "/storeIcon"},
@@ -23,7 +24,7 @@ quantity: 10,
 oldPrice: 2000,
 discount: 20,
 newPrice: 1600,
-images: ["/images/products/phone1.png"],
+images: "/images/GARY.png",
 features: ["  شاشة١٢٨  إنش", "ذاكرة٦٫٥ GB", "٦٤ MP كاميرا "], 
 },
 {
@@ -34,7 +35,7 @@ quantity: 7,
 oldPrice: 4000,
 discount: 10,
 newPrice: 3600,
-images: ["/images/products/iphone.png"],
+images: "/../assets/images/GARY.png",
 features: [" شاشةOLED", "٢٥٦ ذاكرةGB", " معالجA16"],
 },
 {
@@ -45,7 +46,7 @@ quantity: 15,
 oldPrice: 800,
 discount: 5,
 newPrice: 760,
-images: ["/images/products/airpods.png"],
+images: "/../assets/images/GARY.png",
 features: [
     "عزل الضوضاء", "صوت نقي"
 ]
@@ -58,7 +59,7 @@ quantity: 4,
 oldPrice: 2500,
 discount: 15,
 newPrice: 2125,
-images: ["/images/products/tv.png"],features: ["65 ٤ K", "HDR", " بوصة", "دقة"],
+images: "../assets/images/GARY.png",features: ["65 ٤ K", "HDR", " بوصة", "دقة"],
 },
 {
 id: 5,
@@ -68,7 +69,7 @@ quantity: 6,
 oldPrice: 3500,
 discount: 12,
 newPrice: 3080,
-images: ["/images/products/laptop.png"],
+images: "../assets/images/GARY.png",
 features: ["١٦ رامGB", "SSD 512GB", " معالجi7"],
 },
 {
@@ -79,7 +80,7 @@ quantity: 12,
 oldPrice: 1500,
 discount: 10,
 newPrice: 1350,
-images: ["/images/products/tablet.png"],
+images: "../assets/images/GARY.png",
 features: ["  شاشة٦٤ GB", "ذاكرة١٠٫٥]"]
 },
 // ======= أزياء )======= (٦
@@ -90,7 +91,7 @@ quantity: 20,
 oldPrice: 150,
 discount: 10,
 newPrice: 135,
-images: ["/images/products/shirt1.png"],
+images: "../assets/images/GARY.png",
 features: [
     "قطن", "ألوان متعددة",
 ]
@@ -103,7 +104,7 @@ quantity: 5,
 oldPrice: 500,
 discount: 20,
 newPrice: 400,
-images: ["/images/products/dress.png"],
+images: "../assets/images/GARY.png",
 features:[ "قماش فاخر","ألوان متعددة",]
 },
 {
@@ -113,7 +114,7 @@ categories: [2,7],
 quantity: 25,
 oldPrice: 200,discount: 5,
 newPrice: 190,
-images: ["/images/products/jeans.png"],
+images: "../assets/images/GARY.png",
 features:[ "مقاسات متعددة", "لون أزرق غامق",]
 },
 {
@@ -124,7 +125,7 @@ quantity: 15,
 oldPrice: 350,
 discount: 15,
 newPrice: 298,
-images: ["/images/products/shoes.png"],
+images: ["../assets/images/GARY.png"],
 features: [
     "مريح","مناسب للجري",
 ]
@@ -379,5 +380,4 @@ newPrice: 3325,
 images: ["/images/products/ps5.png"],
  features: ["تيرا 1", "يد تحكم مزدوجة",]
 },
-
 ];

@@ -2,10 +2,11 @@
 <template>
   <div :class="darkMode ? ' text-emerald-50' : 'text-emerald-800'"  class="p-2">
     <h1 class="text-3xl font-bold mb-6 text-center"> اهلا بك في متجر ,<span class="text-xl">  أبو شاكر</span></h1>
+    
     <!-- السلايدر -->
      <div class=" relative h-64 overflow-hidden mb-6">
       <transition-group name="fade" tag="div">
-         <img v-for="(slide, index) in sliderImages" :key="index" src="../assets//images/myStoreDark.png" alt="صورة السلايد" v-show="currentSlide === index" class=" absolute w-full h-full object-cover transition-all duration-1000">
+         <img v-for="(slide, index) in sliderImages" :key="index" :src="slide" alt="صورة السلايد" v-show="currentSlide === index" class=" absolute w-full h-full object-cover transition-all duration-1000">
       </transition-group>
      </div>
      <categoties-with-products/>
@@ -14,12 +15,13 @@
         <h2>الأكثر مبيعا</h2>
         <div class="flex overflow-x-auto gap-6 pd-4 sanp-x snap-mandatory scroll-smooth">
           <div v-for=" product in bestSelling" :key="product.id" class=" snap-center min-w-[250px] rounded-2xl shadow p-2 text-center hover:scale-105 transition">
-             <img :src="product.image" alt="صورة المنتج" class="h-40 mx-auto mb-3 object-contain">
+             <img :src="'https://picsum.photos/300'" alt="صورة المنتج" class="h-40 mx-auto mb-3 object-contain">
+             <h2>{{ product.images }}</h2>
              <h3 class=" font-semibold">{{ product.name }}</h3>
              <p class="">{{ product.newPrice }} ر.س</p>
              <div class=" mt-2 flex justify-center gap-2">
-              <button @click="goToDetails(product.id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-2 py-1 rounded-b-lg">عرض</button>
-              <button @click="addToCart(product.id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-2 py-1 rounded-b-lg">إضافة</button>
+              <button title="عرض تفاصيل المنتج" @click="goToDetails(product.id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-2 py-1 rounded-b-lg"><i class="fas fa-eye"></i></button>
+              <button title="  إضافة المنتج إلى السلة" @click="addToCart(product.id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-2 py-1 rounded-b-lg"><i class="fas fa-cart-plus"></i></button>
              </div>
           </div>
         </div>
@@ -29,12 +31,12 @@
         <h2 class=" text-2xl font-bold mb-4 text-center">الأحدث</h2>
         <div class="flex overflow-auto gap-6 pd-4 snap-x snap-mandatory scroll-smooth">
           <div v-for="product in latestProducts" :key="product.id" class=" snap-center min-w-[250px] rounded-2xl shadow p-4 text-center hover:scale-105 transition">
-              <img :src="product.image" class=" h-40 mx-auto mb-3 object-contain" alt="صورة">
+              <img :src="'https://dummyimage.com/300x300/000/fff'" class=" h-40 mx-auto mb-3 object-contain" alt="صورة">
               <h3 class=" font-semibold">{{ product.name }}</h3>
               <p class="m-2">{{ product.newPrice }} ر.س </p>
               <div class=" mt-2 flex justify-center gap-2">
-              <button @click="goToDetails(product.id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-2 py-1 rounded-b-lg">عرض</button>
-              <button @click="addToCart(product.id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-2 py-1 rounded-b-lg">إضافة</button>
+              <button title="عرض تفاصيل المنتج" @click="goToDetails(product.id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-2 py-1 rounded-b-lg"><i class="fas fa-eye"></i></button>
+              <button title="  إضافة المنتج إلى السلة" @click="addToCart(product.id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-2 py-1 rounded-b-lg"><i class="fas fa-cart-plus"></i></button>
              </div>
           </div>
         </div>
@@ -52,6 +54,7 @@ import ScrollReveal from 'scrollreveal';
 import { products, categories } from "../assets/data/productsApi";
 import CategotiesWithProducts from "../components/CategotiesWithProducts.vue";
 import { showAddToCartSuccess } from '../utils/notifications';
+import { showToast } from '../stores/toast';
 
 const router = useRouter();
 const cart = useCartStore();
@@ -62,9 +65,11 @@ const sr = ScrollReveal();
 
 // صور السلايدر
 const sliderImages =[
-  "../images/GARY.png",
-  "../images/GARY.png",
-  "../images/GARY.png",
+  "https://dummyimage.com/300x300/000/fff",
+  "https://i.pravatar.cc/100",
+  "https://dummyimage.com/300x300",
+  "https://picsum.photos/300/3000",
+  "https://picsum.photos/100/200",
 ]
 
 const currentSlide = ref(0)
@@ -78,7 +83,7 @@ function addToCart(productId) {
   if (!product) return;
 
   cart.addToCart({ ...product, quantity: 1 });
-  showAddToCartSuccess();
+  showToast('تم إضافة المنتج الى السة');
 }
 
 onMounted(() =>{

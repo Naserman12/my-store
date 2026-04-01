@@ -4,10 +4,11 @@
             <div class=" contener mx-auto px-4 py-3 flex items-center justify-between">
                 <!-- روابط التنقل -->
                 <ul class="hidden md:flex items-center gap-6 font-medium ">
-                    <li><router-link active-class="underline underline-offset-4" to="/" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500 '" class="fas fa-home ml-3" exact></router-link></li>
-                    <li><router-link active-class="underline underline-offset-4" to="/cart" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="fas fa-cart-plus ml-3"></router-link></li>
-                    <!-- <li><router-link active-class="underline underline-offset-4" to="/categories" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="fas fa-tasks ml-3">1</router-link></li> -->
-
+                    <li><router-link title="الرائيسية" active-class="underline underline-offset-4" to="/" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500 '" class="fas fa-home ml-3" exact></router-link></li>
+                    <li><router-link title="عرض السلة" active-class="underline underline-offset-4" to="/cart" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="fas fa-cart-plus ml-3"></router-link></li>
+                    <li><router-link title="من نحن" active-class="underline underline-offset-4" to="/About" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="fas fa-user ml-3"></router-link></li>
+                    <li><router-link title="اتصل بنا" active-class="underline underline-offset-4" to="/Contact" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="fas fa-phone ml-3"></router-link></li>
+                    <li><router-link title="حسابي" active-class="underline underline-offset-4" to="/profile" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="fas fa-user ml-3"></router-link></li>
                     <!-- التصنيفات قائمة منسدلة -->
                      <li class=" relative group">
                         <button :class="darkMode ? 'hover:bg-emerald-800' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="flex items-center gap-1"> <i class="fas fa-chevron-down fas fa-tasks  text-sm text-amber-50"></i>
@@ -50,12 +51,12 @@
                 <!-- الاشعارات -->
            
                      <router-link to="/" class="p-2 rounded-lg ">
-                        <i class="fas fa-bell"></i>
+                        <i title="الإشعارات" class="fas fa-bell"></i>
                        <span class="absolute top-3 right-4- bg-red-500 text-amber-50 text-sm font-bold py-0.5 px-1 rounded-full">3</span>
                     </router-link>
                   
                 <!-- Mode Button -->
-                <button @click="toggleMode" class=" text-lg text-amber-50 rounded-full ">
+                <button title="تغير الوان الخلفية" @click="toggleMode" class=" text-lg text-amber-50 rounded-full ">
                      <span v-if="darkMode">
                          ☀
                      </span>
@@ -64,7 +65,7 @@
                      </span>
                  </button>
                 <!-- Logo & Site name -->
-                 <div  class="flex items-center gap-2 m-0">
+                 <div title="شعار الموقع" class="flex items-center gap-2 m-0">
                      <span :class="darkMode ? 'text-amber-50' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="font-bold text-xl ">MY.STORE</span>
                      <a href="/" class=" hover:underline">
                          <img :src="darkMode? lightLogo : DarkLogo " alt="logo" class="w-10 h-10 text-amber-50">
@@ -155,12 +156,13 @@
 </template>
 
 <script setup>
-import  { ref } from "vue";
+import  { onMounted, ref } from "vue";
 import { products } from "../assets/data/productsApi.js";
 import Category from "../pages/Category.vue";
 import DarkLogo from '../assets/images/myStoreDark.png';
 import lightLogo from '../assets/images/myStoreLight.png';
 import searchBtn from "./searchBtn.vue";
+import Search from "../pages/Search.vue";
 
 import { useDarkMode } from "./useDarkMode.js";
 const {darkMode, toggleMode} = useDarkMode();
@@ -175,6 +177,7 @@ const toggleCategories = () => {
     categoriesOpen.value = !categoriesOpen.value
     // console.log('Button => ', categoriesOpen.value)
 }
+
 </script>
 
 <style>

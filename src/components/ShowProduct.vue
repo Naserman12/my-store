@@ -13,7 +13,7 @@
                     <!-- صور المنتج -->
                      <div class="md:w-1/2 p-6 flex flex-col items-center">
                         <div class="w-full max-w-md relative">
-                            <img :src="currnentImage" alt="صور المنتج" class="h-auto rounded-lg  shadow-md">
+                            <img :src="'https://i.pravatar.cc/100'" alt="صور المنتج" class="h-auto rounded-lg  shadow-md">
                             <!-- التنقل بين الصور -->
                              <button @click="prevImage" class="absolute top-1/2 left-0 -translate-y-1/2 bg-emerald-700 text-amber-50 p-2 rounded-full">
                                 &lt;
@@ -24,7 +24,7 @@
                         </div>
                         <!-- الصور المصغرة -->
                          <div class="flex gap-2 mt-4">
-                            <img v-for="(img, index) in images" :key="index" :src="img"
+                            <img v-for="(img, index) in images" :key="index" :src="'https://i.pravatar.cc/100'"
                             @click="currnentImage = index" :class="['w-16 h-16 object-cover rounded cursor-pointer border',
                             currnentImage === index ?
                             'border-emerald-600': 
@@ -53,21 +53,6 @@
                             </li>
                          </ul>
                      </div>
-                     <!-- التحكم بالكمية واضافة للسلة -->
-                      <!-- <div :class="darkMode ? 'bg-emerald-500 text-amber-50' : 'bg-emerald-50 hover:text-emarale-500'"  class="flex flex-col justify-between mb-4 p-4  border rounded-lg">
-                        <div class="flex items-center mb-4 sm:mb-0">
-                            <span class=" font-semibold ml-3">الكمية:</span>
-                            <div class="flex items-center border border-amber-50 rounded-md overflow-hidden">
-                                <button @click="decreaseQuantity" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 hover:text-emarale-50'" class=" m-0.5 rounded-full px-3 py-1  transition-colors" >
-                                    <i class="fas fa-minus">-</i>
-                                </button>
-                                <span class="px-3 py-1 w-8 bg-amber-50 text-gray-700 text-center">{{ quantity }}</span>
-                                <button @click="increaseQuantity" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 hover:text-emarale-50'" class=" m-0.5 rounded-full px-3 py-1 transition-colors">
-                                    <i class="fas fa-blus">+</i>
-                                </button>
-                            </div>
-                        </div>
-                    </div> -->
                     <!-- التحكم بالكمية واضافة للسلة -->
                     <div  :class="darkMode ? 'bg-emerald-500 text-amber-50' : 'bg-emerald-50 hover:text-emarale-500'" class="flex flex-col justify-between mb-6 p-4 border rounded-lg">
                         <div class="flex items-center mb-4 sm:mb-0">
@@ -127,7 +112,7 @@ const {darkMode, toggleMode} = useDarkMode();
   <script>
   import { useCartStore } from '../stores/cart';
   import { products, categories } from '../assets/data/productsApi';
-  import { showAddToCartSuccess } from '../utils/notifications';
+  import { showToast } from '../stores/toast';
   export default {
             data() {
                 return {
@@ -176,10 +161,10 @@ const {darkMode, toggleMode} = useDarkMode();
                     }
                 },            
                 addToCart(){
+
                     this.product.quantity = this.quantity;
                     this.cart.addToCart(this.product);
-                    showAddToCartSuccess();
-                    console.log(this.quantity);
+                    showToast('تم إضافة الممنتج الى السلة');
                     this.$router.push('/cart');
                 }
             },
