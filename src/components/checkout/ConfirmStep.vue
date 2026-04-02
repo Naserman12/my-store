@@ -57,10 +57,10 @@ const cartTotal = computed(() =>
 
 const finalTotal = computed(() =>
   cartTotal.value +
-  checkout.shippingPrice -
+  checkout.shipping.shippingPrice -
   checkout.discount
 )
-
+console.log('السعر النهائي:', checkout.shipping.shippingPrice)
 const payNow = () => {
 
   ordersStore.createOrder(

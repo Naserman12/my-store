@@ -1,6 +1,6 @@
 <template>
     <div>
-        <nav  :class="darkMode ? 'bg-emerald-700 text-amber-50' : 'bg-emerald-50 text-emerald-700'" class="shadow-md sticky top-0 z-50 justify-between items-center transition-colors duration-300">
+        <nav  :class="darkMode ? 'bg-gray-900 text-amber-50' : 'bg-emerald-50 text-emerald-700'" class="shadow-md sticky top-0 z-50 justify-between items-center transition-colors duration-300">
             <div class=" contener mx-auto px-4 py-3 flex items-center justify-between">
                 <!-- روابط التنقل -->
                 <ul class="hidden md:flex items-center gap-6 font-medium ">
@@ -125,8 +125,9 @@
                                     </div>
                                 </li>
                                 <!-- User -->
+                                 
                                 <li class=" border-b border-amber-50 m-3">
-                                    <a href="#" class="flex items-center justify-between py3 px-4 transition-colors"
+                                    <a href="/Profile" class="flex items-center justify-between py3 px-4 transition-colors"
                                     @click="toggleCategories">
                                     <div class=" items-center flex">
                                         <i class="fas fa-user ml-3">

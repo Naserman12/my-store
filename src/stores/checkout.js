@@ -7,7 +7,7 @@ export const useCheckoutStore = defineStore('checkout', {
       shipping: {
           email: '',
           address: '',
-          shippingMethod: 'free',
+          shippingMethod: 'ourStore',
           shippingPrice: 0,
           coupon: '',
         },
@@ -42,16 +42,16 @@ export const useCheckoutStore = defineStore('checkout', {
       // حساب سعر الشحن
       switch (method) {
         case 'free':
-          this.shippingPrice = 0
+          this.shipping.shippingPrice = 0
           break
         case 'mrsool':
-          this.shippingPrice = 25
+          this.shipping.shippingPrice = 25
           break
         case 'store':
-          this.shippingPrice = 10
+          this.shipping.shippingPrice = 10
           break
         case 'ourStore':
-          this.shippingPrice = 5
+          this.shipping.shippingPrice = 5
           break
       }
     },

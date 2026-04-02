@@ -11,7 +11,7 @@
       <div class="space-y-6">
 
         <div class="bg-gray-100 p-4 rounded-lg">📍 العنوان: الرياض - السعودية</div>
-        <div class="bg-gray-100 p-4 rounded-lg">📞 الهاتف: +966000000</div>
+        <div class="bg-gray-100 p-4 rounded-lg">📞 الهاتف: +966594599729</div>
         <div class="bg-gray-100 p-4 rounded-lg">✉️ البريد: support@mystore.com</div>
 
         <div class="bg-gray-100 p-5 rounded-xl">

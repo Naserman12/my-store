@@ -163,7 +163,7 @@ const validate = () => {
 const register = () => {
 
   if (!validate()) {
-    showToast('تحقق من البيانات ❌')
+    showToast('تحقق من البيانات ❌', 'error')
     return
   }
 

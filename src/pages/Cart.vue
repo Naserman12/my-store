@@ -87,10 +87,10 @@
                    <input v-model="checkout.shipping.coupon" type="text" class="w-full border p-2 rounded mb-3" />
                    <h3 class=" font-bold mb-2">خيارات الشحن</h3>
                    <div class="mb-3 space-y-2">
-                       <label class="block"><input type="radio" v-model="checkout.shipping.method" value="free"  @change="checkout.setShippingMethod('free')"> 3-5 أيام عمل شحن مجاني</label>
-                       <label class="block"><input type="radio" v-model="checkout.shipping.method" value="mrsool"  @change="checkout.setShippingMethod('mrsool')">مرسول (سريع)</label>
-                       <label class="block"><input type="radio" v-model="checkout.shipping.method" value="store"  @change="checkout.setShippingMethod('store')"> استلام من متجر معتمد </label>
-                       <label class="block"><input type="radio" v-model="checkout.shipping.method" value="ourStore"  @change="checkout.setShippingMethod('ourStore')"> استلام من متجرنا (موصى به)</label>
+                       <label class="block"><input type="radio" v-model="checkout.shipping.shippingMethod" value="free"  @change="checkout.setShippingMethod('free')"> 3-5 أيام عمل شحن مجاني</label>
+                       <label class="block"><input type="radio" v-model="checkout.shipping.shippingMethod" value="mrsool"  @change="checkout.setShippingMethod('mrsool')">مرسول (سريع)</label>
+                       <label class="block"><input type="radio" v-model="checkout.shipping.shippingMethod" value="store"  @change="checkout.setShippingMethod('store')"> استلام من متجر معتمد </label>
+                       <label class="block"><input type="radio" v-model="checkout.shipping.shippingMethod" value="ourStore"  @change="checkout.setShippingMethod('ourStore')"> استلام من متجرنا (موصى به)</label>
                    </div>
                    <p class=" font-bold">الإجمالي: {{ totalPrice }} ر.س</p>
                    <button type="submit" class="mt-4 bg-emerald-600 hover:bg-emerald-700 text-amber-50 px-4 py-2 rounded-lg ">إتمام الطلب</button>

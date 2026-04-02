@@ -1,5 +1,5 @@
 <template>
-    <div v-if="showToast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-emerald-600 text-white rounded-xl px-4 py-2 shadow-lg">
+    <div v-if="showToast1" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-emerald-600 text-white rounded-xl px-4 py-2 shadow-lg">
     {{ toastText }}
     </div>
   <div class="p-4 max-w-4xl mx-auto">
@@ -11,6 +11,7 @@
         عرض منتجات المدير
       </router-link>
     </div>
+    <AdminSidebar />
     <h1 class="text-3xl font-bold mb-6 text-center">إضافة منتج جديد</h1>
 
     <div class="bg-white shadow rounded-3xl p-6 dark:bg-emerald-900 dark:text-amber-100">
@@ -147,9 +148,10 @@
 <script setup>
 import { ref } from 'vue';
 import { products, categories } from '../assets/data/productsApi';
-// import { products } from '../assets/data/productsApi';
+import AdminSidebar from '../components/admin/AdminSidebar.vue';
+import { showToast } from '../stores/toast';
 
-const showToast = ref(false)
+const showToast1 = ref(false)
 const toastText = ref('')
 const form = ref({
   categoryId: '',
@@ -194,10 +196,11 @@ function submitProduct() {
     const errorMessage = 'يرجى تعبئة اسم المنتج وإضافة ميزة واحدة على الأقل.';
     successMessage.value = errorMessage;
     toastText.value = errorMessage;
-    showToast.value = true;
+    showToast1.value = true;
+    showToast('يرجى تعبئة اسم المنتج وإضافة ميزة واحدة على الأقل. ❌', 'error');
 
     setTimeout(() => {
-      showToast.value = false;
+      showToast1.value = false;
     }, 2000);
     return;
   }
@@ -219,10 +222,11 @@ function submitProduct() {
   savedProduct.value = { ...newProduct };
   successMessage.value = 'تم إضافة المنتج بنجاح.';
   toastText.value = successMessage.value;
-  showToast.value = true;
+  showToast1.value = true;
+  showToast('تم إضافة المنتج بنجاح 🎉');
 
   setTimeout(() => {
-    showToast.value = false;
+    showToast1.value = false;
   }, 2000);
 
   form.value = {

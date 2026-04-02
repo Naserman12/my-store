@@ -17,6 +17,8 @@
             return 'bg-red-500'
         case 'info':
             return 'bg-blue-500'
+        case 'warning':
+            return 'bg-yellow-500'
         default:
             return 'bg-green-500'
     }

@@ -1,5 +1,5 @@
 <template>
- <div dir="rtl" class=" w-full h-full" :class="darkMode ? 'bg-emerald-500' : 'bg-emerald-50 hover:text-emarale-500'">
+ <div dir="rtl" class=" w-full h-full" :class="darkMode ? 'bg-gray-900' : 'bg-emerald-50 hover:text-emarale-500'">
     <navbar/>
     <router-view  /> 
     <WhatsAppButton/>

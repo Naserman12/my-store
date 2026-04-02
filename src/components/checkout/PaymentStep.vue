@@ -19,7 +19,7 @@
     </div>
 
     <hr>
-    <p>الشحن: {{ checkout.shippingPrice }} ر.س</p>
+    <p>الشحن: {{ checkout.shipping.shippingPrice }} ر.س</p>
     <p v-if="checkout.discount">الخصم: - {{checkout.discount }} ر.س</p>
     <p class="font-bold text-lg">
       الإجمالي: {{ checkout.total  }} ر.س
@@ -97,12 +97,10 @@ const payments = ['Visa', 'Mada', 'Apple Pay', 'STC Pay', 'PayPal']
 
 // تطبيق الكوبون
 const applyCoupon = () => {
-
   const ok = checkout.applyCoupon(
     couponCode.value,
     cartStore.total
   )
-
   if (ok) {
     showToast('تم تطبيق الخصم ✅')
   } else {
@@ -112,7 +110,6 @@ const applyCoupon = () => {
 
 // الانتقال للخطوة التالية
 const goNext = () => {
-
   if (!selectedPayment.value) {
     showToast('اختر طريقة الدفع')
     return

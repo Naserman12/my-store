@@ -1,10 +1,9 @@
 <template>
 <div class="p-6 space-y-6">
-
-<h1 class="text-2xl font-bold">
-📊 لوحة تحكم المتجر
-</h1>
-
+  <h1 class="text-2xl font-bold">
+    📊 لوحة تحكم المتجر
+  </h1>
+  <AdminSidebar />
 <!-- الاحصائيات -->
 <div class="grid md:grid-cols-4 gap-4">
 
@@ -47,6 +46,7 @@
 import { computed } from 'vue'
 import StatCard from '../../components/admin/StatCard.vue'
 import { useOrdersStore } from '../../stores/orders.js'
+import AdminSidebar from '../../components/admin/AdminSidebar.vue'
 const ordersStore = useOrdersStore()
 const totalSales = computed(() => ordersStore.totalSales)
 const todaySales = computed(() => ordersStore.todaySales)
@@ -57,21 +57,3 @@ const latestOrders = computed(() =>
   ordersStore.orders.slice(0, 5)
 )
 </script>
-
-<!-- 
-<script setup>
-import { computed } from 'vue'
-import { useOrdersStore } from '../stores/orders.js'
-
-
-const ordersStore  = useOrdersStore()
-
-const totalSales = computed(()=> ordersStore.totalSales)
-const todaySales = computed(()=> ordersStore.todaySales)
-const weeklySales = computed(()=> ordersStore.weeklySales)
-const monthlySales = computed(()=> ordersStore.monthlySales)
-
-const latestOrders = computed(() =>
-  ordersStore.orders.slice(0,5)
-)
-</script> -->

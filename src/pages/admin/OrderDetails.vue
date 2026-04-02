@@ -27,9 +27,8 @@ class="flex justify-between border-b py-2">
 v-model="selectedStatus"
 class="border p-2 rounded w-full">
 
-<option
-v-for="(label,key) in STATUS_LABELS"
-:value="key">
+<option v-for="(label, key) in STATUS_LABELS"
+:key="label" :value="key">
 {{ label }}
 </option>
 
@@ -49,8 +48,8 @@ class="mt-4 bg-emerald-600 text-white px-4 py-2 rounded">
 <script setup>
 import { useRoute } from 'vue-router'
 import { ref, computed } from 'vue'
-import { useOrdersStore } from '@/stores/orders'
-import { STATUS_LABELS } from '@/constants/orderStatus'
+import { useOrdersStore } from '../../stores/orders'
+import { STATUS_LABELS } from '../../stores/orderStatus'
 
 const route = useRoute()
 const store = useOrdersStore()
