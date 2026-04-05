@@ -30,7 +30,7 @@
 
 <tr v-for="order in latestOrders" :key="order.id">
   <td>{{ order.id }}</td>
-  <td>{{ order.date }}</td>
+  <td> {{ new Date(order.created_at).toLocaleDateString() }} </td>
   <td>{{ order.status }}</td>
   <td>{{ order.total }} ر.س</td>
 </tr>
@@ -43,17 +43,24 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed,onMounted } from 'vue'
 import StatCard from '../../components/admin/StatCard.vue'
-import { useOrdersStore } from '../../stores/orders.js'
 import AdminSidebar from '../../components/admin/AdminSidebar.vue'
-const ordersStore = useOrdersStore()
-const totalSales = computed(() => ordersStore.totalSales)
-const todaySales = computed(() => ordersStore.todaySales)
-const weeklySales = computed(() => ordersStore.weeklySales)
-const monthlySales = computed(() => ordersStore.monthlySales)
+import { useAdminStore } from '../../stores/admin.js'
+
+const adminStore = useAdminStore()
+
+onMounted(() => {
+  adminStore.fetchDashboard()
+  adminStore.fetchLatestOrders()
+})
+const totalSales = computed(() => adminStore.stats.total_sales || 0)
+const todaySales = computed(() => adminStore.stats.today_sales || 0)
+const weeklySales = computed(() => adminStore.stats.weekly_sales || 0)
+const monthlySales = computed(() => adminStore.stats.monthly_sales || 0)
 
 const latestOrders = computed(() =>
-  ordersStore.orders.slice(0, 5)
+  adminStore.latestOrders
 )
+console.log("Latest Orders:", latestOrders.value)
 </script>

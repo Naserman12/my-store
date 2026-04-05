@@ -16,6 +16,7 @@ import Contact from '../pages/Contact.vue'
 import AdminDashboard from '../pages/admin/AdminDashboard.vue'
 import Wishlist from "../pages/Wishlist.vue";
 import Profile from "../pages/auth/Profile.vue";
+import AdminOrders from "../pages/admin/AdminOrders.vue";
 
 const routes = [
   { path: '/profile', component: Profile, meta: { requiresAuth: true } },
@@ -23,6 +24,7 @@ const routes = [
   { path:'/admin/orders/:id', component:()=>import('../pages/admin/OrderDetails.vue')},
   { path: '/admin', name: 'admin', component: AdminDashboard, },
   { path: '/orders', name: 'orders',component: Orders },
+  { path: '/admin/orders', component: AdminOrders },
   { path: '/order-success',  name: 'order-success', component: OrderSuccess},
   { path: '/checkout', name: 'checkout',  component: () => import('../pages/Checkout.vue')},
   { path: '/profile', component: Profile},

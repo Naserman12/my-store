@@ -20,14 +20,14 @@ const remember = ref(false)
 
 const login = async () => {
     try {
-        const res = await authStore.login(form);
+    const res = await authStore.login(form);
     loading.value = true;
     setTimeout(() => {
-        loading.value = false
         showToast("اهلا  بعودتك", "success")
         if (remember.value) {
             localStorage.setItem('user', form.email)     
         }
+        loading.value = false;
         localStorage.setItem('user', form.email)
         
     }, 1500);

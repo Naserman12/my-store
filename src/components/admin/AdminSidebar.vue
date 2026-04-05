@@ -27,6 +27,7 @@ const route = useRoute();
 const links = [
   { name: 'الرئيسية', to: '/admin' },
   { name: 'إدارة المنتجات', to: '/admin/products' },
+  { name: 'إدارة الطلبات', to: '/admin/orders' },
   { name: 'إضافة منتج', to: '/add-product' },
 ];
 </script>
