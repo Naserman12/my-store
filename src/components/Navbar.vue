@@ -9,12 +9,16 @@
                     <li><router-link title="من نحن" active-class="underline underline-offset-4" to="/About" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="fas fa-user ml-3"></router-link></li>
                     <li><router-link title="اتصل بنا" active-class="underline underline-offset-4" to="/Contact" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="fas fa-phone ml-3"></router-link></li>
                     <li><router-link title="حسابي" active-class="underline underline-offset-4" to="/profile" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="fas fa-user ml-3"></router-link></li>
-                    <!-- التصنيفات قائمة منسدلة -->
+                          <router-link to="/wishlist">
+  ❤️
+                </router-link>
+                
+                    <!-- التصنيفات قائمة منسدلة
                      <li class=" relative group">
                         <button :class="darkMode ? 'hover:bg-emerald-800' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="flex items-center gap-1"> <i class="fas fa-chevron-down fas fa-tasks  text-sm text-amber-50"></i>
-                        </button>
+                        </button>-->
                         <!-- القائمة النسدلة -->
-                         <ul class=" absolute right-0 mt-2 w-48 bg-emerald-400 border rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-2 transition-all">
+                         <!-- <ul class=" absolute right-0 mt-2 w-48 bg-emerald-400 border rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-2 transition-all">
                             <li>
                                 <a href="/category/1" class=" block px-4 py-2 hover:bg-emerald-300"> التصنيف 1</a>
                             </li>
@@ -31,7 +35,7 @@
                                 <a href="#" class=" block px-4 py-2 hover:bg-emerald-300"> عرض المزيد</a>
                             </li>
                          </ul>
-                     </li>
+                     </li>-->
                 </ul>
                 <!-- إيقونة السلة -->
                  <div class=" felx items-center gap-4 right-0">
@@ -71,7 +75,9 @@
                          <img :src="darkMode? lightLogo : DarkLogo " alt="logo" class="w-10 h-10 text-amber-50">
                      </a>
                  </div>
+           
             </div>
+
             <!-- القائمة الجانبية في الجوال -->
              <transition name="slide">
                 <div v-if="isOpen" class="fixed inset-0 bg-emerald-400 bg-opacity-50 z-50">

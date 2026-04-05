@@ -7,30 +7,42 @@ import { useDarkMode } from "../components/useDarkMode";
 import SkeletonProduct from './SkeletonProduct.vue';
 import { showAddToCartSuccess } from '../utils/notifications';
 import { showToast } from '../stores/toast';
+import productApi from '../api/product';
+import cartApi from "../api/cart";
 
 const {darkMode, toggleMode} = useDarkMode();
 const router = useRouter();
 const cart = useCartStore();
+
+
 const selectedCategory = ref(null)
 const loading = ref(true)
-const productsAPI = ref([])
 const selectCategory =  (cat) => {
     selectedCategory.value = cat
 }
 
+const productAPI = ref([])
+
+onMounted(async () => {
+  const res = await productApi.getProducts()
+  productAPI.value = res.data.data
+})
 function goToDetails(id) {
   router.push({ name: "product", params: { id } });
 }
-function addToCart(product) {
-    if (!product) return;
-    cart.addToCart({ ...product, quantity: 1 });
-    showToast('تم إضافة المنتج الى السة');
-    // router.push('/cart');
+const addToCart = async (id) => {
+  await cartApi.add(id, 1);
+  showToast('تم إضافة المنتج الى السة');
 }
+
+// function addToCart(product_id) {
+//     await cartApi.add({ id: product_id, quantity: 1 });
+//     // router.push('/cart');
+// }
 // جلب المنتجات على حسب التصنيف
 const previewProducts = computed(() => {
     if (!selectedCategory.value) return []
-     return  products.filter((p) => p.categories.includes(Number(selectedCategory.value.id))).slice(0, 4)
+     return  productAPI.value.filter((p) => p.categories.includes(Number(selectedCategory.value.id))).slice(0, 4)
 })
 
 //  تحديد تصنيف تلقائي
@@ -72,7 +84,7 @@ onMounted(async () => {
                           <h3 class=" text-sm font-semibold">{{ product.name }}</h3>
                           <p class=" text-sm ">{{ product.newPrice }} ر.س</p>
                           <button title="عرض تفاصيل المنتج" @click="goToDetails(product.id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-3 py-1 rounded m-1"><i class="fas fa-eye"></i></button>
-                          <button title="  إضافة المنتج إلى السلة" @click="addToCart(product)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-3 py-1 rounded "> <i class="fas fa-cart-plus"></i></button>
+                          <button title="  إضافة المنتج إلى السلة" @click="addToCart(id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-3 py-1 rounded "> <i class="fas fa-cart-plus"></i></button>
                       </div>
                   </div>
                   <!-- عرض المزيد -->

@@ -121,18 +121,27 @@
 
 <script setup>
         import { useCartStore } from '../stores/cart';
-        import { computed } from 'vue';
-        import {ref} from 'vue';
+        import {ref, computed, onMounted } from 'vue';
         import { useRouter } from 'vue-router';
         import { useDarkMode } from '../components/useDarkMode';
         import { showToast } from '../stores/toast';
         import { useCheckoutStore } from '../stores/checkout'
+        
+        import cartApi from "../api/cart";
 
+        
         const checkout = useCheckoutStore()
         const {darkMode, toggleMode} = useDarkMode();
         const cartStore = useCartStore();
         const router = useRouter();
-        const cart = computed(()=> cartStore.cart)
+        // const cart = computed(()=> cartStore.cart)
+        const cart = ref(1);
+
+        const loadCart = async () => {
+        const res = await cartApi.getCart();
+        cart.value = res.data;
+        };
+        onMounted(loadCart);
         const totalPrice = computed(()=> 
         cartStore.cart.reduce(
          (sum, item) => sum + item.newPrice * item.quantity,

@@ -9,51 +9,25 @@ import Home from "../pages/Home.vue";
 import AddProduct from "../pages/AddProduct.vue";
 import AdminProducts from "../pages/AdminProducts.vue";
 import Search from "../pages/Search.vue";
-import Login from "../pages/Login.vue";
-import Register from "../pages/Register.vue";
+import Login from "../pages/auth/Login.vue";
+import Register from "../pages/auth/Register.vue";
 import About from '../pages/About.vue'
 import Contact from '../pages/Contact.vue'
-import Profile from '../pages/Profile.vue'
 import AdminDashboard from '../pages/admin/AdminDashboard.vue'
-
+import Wishlist from "../pages/Wishlist.vue";
+import Profile from "../pages/auth/Profile.vue";
 
 const routes = [
-    {
-    path:'/admin/orders/:id',
-    component:()=>import('../pages/admin/OrderDetails.vue')
-    },
-    {
-      path: '/admin',
-      name: 'admin',
-      component: AdminDashboard,
-    },
-     {
-      path: '/orders',
-      name: 'orders',
-      component: Orders
-     },
-    {
-      path: '/order-success',
-      name: 'order-success',
-      component: OrderSuccess
-    },
-    {
-      path: '/checkout',
-      name: 'checkout',
-      component: () => import('../pages/Checkout.vue')
-    },
-  {
-    path: '/profile',
-    component: Profile
-  },
-  {
-    path: '/about',
-    component: About
-  },
-  {
-    path: '/contact',
-    component: Contact
-  },
+  { path: '/profile', component: Profile, meta: { requiresAuth: true } },
+  { path:'/wishlist', component: Wishlist},
+  { path:'/admin/orders/:id', component:()=>import('../pages/admin/OrderDetails.vue')},
+  { path: '/admin', name: 'admin', component: AdminDashboard, },
+  { path: '/orders', name: 'orders',component: Orders },
+  { path: '/order-success',  name: 'order-success', component: OrderSuccess},
+  { path: '/checkout', name: 'checkout',  component: () => import('../pages/Checkout.vue')},
+  { path: '/profile', component: Profile},
+  { path: '/about', component: About},
+  { path: '/contact', component: Contact},
   { path: "/", name: "home", component: Home },
   { path: "/categories", name: "categories", component: Categories },
   { path: "/category/:id", name: "category", component: Category },
@@ -61,15 +35,24 @@ const routes = [
   { path: '/cart', component: Cart },
   { path: '/search', name: 'search', component: Search },
   { path: '/add-product', name: 'add-product', component: AddProduct },
-  {
-    path: '/admin/products',
-    name: 'AdminProducts',
-    component: AdminProducts,
-  },
+  { path: '/admin/products', name: 'AdminProducts',component: AdminProducts,},
   { path: '/login', name: 'login', component: Login },
   { path: '/register', name: 'register', component: Register }
 ];
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem("token");
+
+  if (to.meta.requiresAuth && !token) {
+    next("/login");
+  } else {
+    next();
+  }
+});
+export default router;
+
+

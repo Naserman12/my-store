@@ -16,8 +16,8 @@
                    <span class=" absolute -top-1- -right-2- bg-red-500 text-amber-50 text-sm font-bold py-0.5 px-2 rounded-full">3</span>
                   <span class=" text-sm">السلة</span>
                </router-link>
-               <router-link active-class="underline underline-offset-4 bg-gray-600" to="/category/8" class=" flex flex-col items-center bg-gray-500 text-amber-50 hover:bg-gray-600 rounded-2xl p-1" >
-                <i class=" fas fa-star text-xl"></i>
+               <router-link active-class="underline underline-offset-4 bg-gray-600" to="/wishlist" class=" flex flex-col items-center bg-gray-500 text-amber-50 hover:bg-gray-600 rounded-2xl p-1" >
+                <i class=" text-red-500 far fa-heart"></i>
                 <span class=" text-sm">المفضلة</span>
              </router-link>
              <router-link active-class="underline underline-offset-4 bg-gray-600" to="/profile" class=" flex flex-col items-center bg-gray-500 text-amber-50 hover:bg-gray-600 rounded-2xl p-1" >

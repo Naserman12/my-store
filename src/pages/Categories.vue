@@ -5,7 +5,7 @@
     
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
       <CategoryCard
-        v-for="category in categories"
+        v-for="category in productApi"
         :key="category.id"
         :category="category"
       />
@@ -15,9 +15,12 @@
 
 <script setup>
 import CategoryCard from "../components/CategoryCard.vue";
-import { products, categories } from "../assets/data/productsApi";
+// import { products, categories } from "../assets/data/productsApi";
+import productApi from "../api/product";
+
 import { useDarkMode } from "../components/useDarkMode";
 import { ref } from 'vue';
 const {darkMode, toggleMode} = useDarkMode();
-const category = ref(categories);
+const category = ref(productApi);
+const categories = productApi.getProducts()
 </script>
