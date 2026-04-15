@@ -25,7 +25,7 @@
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
-                            <button @click="handleDelete(item.id)" class="text-red-700 hover:underline">حذف</button>
+                            <button @click="handleDelete(item.id)" class="text-red-700 hover:underline"><i class="text-red-700 hover:underline"></i></button>
                         </div>
                     </div>
                 </div>

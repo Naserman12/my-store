@@ -53,6 +53,7 @@ const { darkMode, toggleMode } = useDarkMode();
 import ScrollReveal from 'scrollreveal';
 import { products, categories } from "../assets/data/productsApi";
 import CategotiesWithProducts from "../components/CategotiesWithProducts.vue";
+
 import { showAddToCartSuccess } from '../utils/notifications';
 import { showToast } from '../stores/toast';
 

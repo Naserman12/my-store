@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import axios from '../api/api'
 
 export const useAdminStore = defineStore('admin', {
-
   state: () => ({
     stats: {},
     latestOrders: [],
@@ -10,21 +9,15 @@ export const useAdminStore = defineStore('admin', {
   }),
 
   actions: {
-
     async fetchDashboard() {
       this.loading = true
-
-      const res = await axios.get('/api/admin/dashboard')
+      const res = await axios.get('/admin/dashboard')
       this.stats = res.data
-
       this.loading = false
     },
-
     async fetchLatestOrders() {
-      const res = await axios.get('/api/admin/orders/latest')
+      const res = await axios.get('/admin/orders/latest')
       this.latestOrders = res.data
     }
-
   }
-
 })

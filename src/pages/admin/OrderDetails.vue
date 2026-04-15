@@ -1,6 +1,6 @@
 <template>
 <div class="p-6 max-w-4xl mx-auto">
-
+ <AdminSidebar />
 <h1 class="text-2xl font-bold mb-6">
 تفاصيل الطلب #{{ order.id }}
 </h1>

@@ -20,17 +20,16 @@ const remember = ref(false)
 
 const login = async () => {
     try {
+     loading.value = true;
     const res = await authStore.login(form);
-    loading.value = true;
     setTimeout(() => {
         showToast("اهلا  بعودتك", "success")
         if (remember.value) {
             localStorage.setItem('user', form.email)     
         }
-        loading.value = false;
-        localStorage.setItem('user', form.email)
-        
-    }, 1500);
+        localStorage.setItem('user', JSON.stringify(res.data.user));
+        loading.value = false; 
+    }, 500);
   } catch (e) {
     error.value = "Login failed";
   }

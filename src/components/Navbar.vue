@@ -1,6 +1,6 @@
 <template>
     <div>
-        <nav  :class="darkMode ? 'bg-gray-900 text-amber-50' : 'bg-emerald-50 text-emerald-700'" class="shadow-md sticky top-0 z-50 justify-between items-center transition-colors duration-300">
+        <nav  :class="darkMode ? 'bg-emerald-900 text-amber-50' : 'bg-emerald-50 text-emerald-700'" class="shadow-md sticky top-0 z-50 justify-between items-center transition-colors duration-300">
             <div class=" contener mx-auto px-4 py-3 flex items-center justify-between">
                 <!-- روابط التنقل -->
                 <ul class="hidden md:flex items-center gap-6 font-medium ">
@@ -12,31 +12,7 @@
                           <router-link to="/wishlist">
   ❤️
                 </router-link>
-                
-                    <!-- التصنيفات قائمة منسدلة
-                     <li class=" relative group">
-                        <button :class="darkMode ? 'hover:bg-emerald-800' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="flex items-center gap-1"> <i class="fas fa-chevron-down fas fa-tasks  text-sm text-amber-50"></i>
-                        </button>-->
-                        <!-- القائمة النسدلة -->
-                         <!-- <ul class=" absolute right-0 mt-2 w-48 bg-emerald-400 border rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-2 transition-all">
-                            <li>
-                                <a href="/category/1" class=" block px-4 py-2 hover:bg-emerald-300"> التصنيف 1</a>
-                            </li>
-                            <li>
-                                <a href="/category/2" class=" block px-4 py-2 hover:bg-emerald-300">التصنيف 2</a>
-                            </li>
-                            <li>
-                                <a href="/category/3" class=" block px-4 py-2 hover:bg-emerald-300">التصنيف 3</a>
-                            </li>
-                            <li>
-                                <a href="/category/4" class=" block px-4 py-2 hover:bg-emerald-300">التصنيف 4</a>
-                            </li>
-                            <li>
-                                <a href="#" class=" block px-4 py-2 hover:bg-emerald-300"> عرض المزيد</a>
-                            </li>
-                         </ul>
-                     </li>-->
-                </ul>
+                    </ul>
                 <!-- إيقونة السلة -->
                  <div class=" felx items-center gap-4 right-0">
                      <!-- زر القائمة للجوال -->
@@ -80,9 +56,10 @@
 
             <!-- القائمة الجانبية في الجوال -->
              <transition name="slide">
-                <div v-if="isOpen" class="fixed inset-0 bg-emerald-400 bg-opacity-50 z-50">
-                    <div class="w-64  h-full p-6 shadow-lg transform transition-transform duration-300"
-                            :class="isOpen ? 'translate-x-0' : '-translate-x-full'" @click.stop>
+                <div v-if="isOpen" ref="target" class="fixed inset-0 bg-opacity-50 z-50 h-80 w-60 right-0 left-40 top-14"
+                                    :class="darkMode ?'bg-emerald-800' : 'bg-emerald-50'">
+                    <div class="w-50  h-full p-6 shadow-lg transform transition-transform duration-300"
+                            :class="isOpen ? 'translate-x-0' : '-translate-x-full'" >
                             <!-- روابط التنقل -->
                         <div class="flex items-center justify-between mb-6 p-4 border-b border-amber-50" >
                              <ul :class="darkMode ? 'text-amber-50' : ' hover:text-emarale-500'" class="py-2">
@@ -164,16 +141,20 @@
 
 <script setup>
 import  { onMounted, ref } from "vue";
-import { products } from "../assets/data/productsApi.js";
-import Category from "../pages/Category.vue";
+import { onClickOutside } from "@vueuse/core";
 import DarkLogo from '../assets/images/myStoreDark.png';
 import lightLogo from '../assets/images/myStoreLight.png';
 import searchBtn from "./searchBtn.vue";
 import Search from "../pages/Search.vue";
-
 import { useDarkMode } from "./useDarkMode.js";
+
 const {darkMode, toggleMode} = useDarkMode();
 // القائمة الجانبية
+const target = ref(null); 
+
+onClickOutside(target, () => {
+    isOpen.value = false;
+})
 const isOpen = ref(false);
 const toggleMenu = () => {
     isOpen.value = !isOpen.value;

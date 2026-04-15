@@ -2,6 +2,7 @@
 
 <div class="p-6 space-y-6">
 
+  <AdminSidebar />
 <h1 class="text-2xl font-bold">
 📦 إدارة الطلبات
 </h1>
@@ -20,7 +21,9 @@
 </thead>
 
 <tbody>
-
+          <template v-if="loading">
+            <skeleton-product v-for="n in 4" :key="n"/>
+          </template>
 <tr v-for="order in orders" :key="order.id" class="border-b">
 
 <td>{{ order.id }}</td>
@@ -111,9 +114,13 @@ class="border rounded p-2"
 <script setup>
 import { onMounted, computed, watch, ref } from 'vue'
 import { useAdminOrdersStore } from '../../stores/adminOrders'
+import SkeletonProduct from '../../components/SkeletonProduct.vue';
+import AdminSidebar from '../../components/admin/AdminSidebar.vue';
 
-const store = useAdminOrdersStore()
-const selectedStatus = ref('')
+
+const store = useAdminOrdersStore();
+const selectedStatus = ref('');
+const loading = ref(true);
 
 onMounted(() => {
   store.fetchOrders()
@@ -131,6 +138,7 @@ const updateStatus = async () => {
   showToast('تم تحديث الحالة ✅')
 }
 watch(order, (val) => {
+  loading.value =true
   if (val) selectedStatus.value = val.status
 })
 

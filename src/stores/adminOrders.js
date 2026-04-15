@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import axios from '../api/api'
 
 export const useAdminOrdersStore = defineStore('adminOrders', {
 
@@ -12,10 +12,10 @@ export const useAdminOrdersStore = defineStore('adminOrders', {
 
   actions: {
 
-    async fetchOrders(page = 1) {
+    async fetchOrders() {
       this.loading = true
 
-      const res = await axios.get(`/api/admin/orders?page=${page}`)
+      const res = await axios.get(`/admin/orders`)
 
       this.orders = res.data.data
       this.pagination = res.data.meta

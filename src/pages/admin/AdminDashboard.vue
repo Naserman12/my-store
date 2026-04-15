@@ -1,9 +1,9 @@
 <template>
 <div class="p-6 space-y-6">
+  <AdminSidebar />
   <h1 class="text-2xl font-bold">
     📊 لوحة تحكم المتجر
   </h1>
-  <AdminSidebar />
 <!-- الاحصائيات -->
 <div class="grid md:grid-cols-4 gap-4">
 

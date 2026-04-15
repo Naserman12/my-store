@@ -1,6 +1,5 @@
 import  { ref, onMounted } from "vue";
 const darkMode = ref(false);
-
 // استرجاع المود عند تحميل الصفحة
 // onMounted(() => {
     const savedMode = localStorage.getItem('headerMode')
