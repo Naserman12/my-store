@@ -8,9 +8,12 @@
 </template>
 
 <script>
-import {ref} from 'vue';
-import { useDarkMode } from '../components/useDarkMode';
-import { onClickOutside } from '@vueuse/core';
-
-const darkMode = ref(useDarkMode());
-</script>
+export default {
+  props: {
+    darkMode: {
+      type: Boolean,
+      default: false
+    }
+  }
+} 
+</script> 

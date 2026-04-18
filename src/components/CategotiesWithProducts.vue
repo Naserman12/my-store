@@ -1,24 +1,35 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useCartStore } from '../stores/cart';
+
 import { useDarkMode } from "../components/useDarkMode";
 import SkeletonProduct from './SkeletonProduct.vue';
 import { showToast } from '../stores/toast';
 import  productsApi from '../api/productsApi';
 import cartApi from "../api/cart";
+import api from "../api/api";
+
+const props = defineProps({
+    product: {
+        type: Object,
+        required: true
+    }
+});
 
 const {darkMode, toggleMode} = useDarkMode();
 const router = useRouter();
-const cart = useCartStore();
 const categoriesAPI = ref([])
 const selectedCategory = ref(null)
+const productsAPI = ref([])
 const loading = ref(true)
+const adding = ref(false);
+
 onMounted(async () => {
   try {
          const res = await productsApi.getCategoriesWithProducts();
         //  الوصول للبيانات
         categoriesAPI.value = res.data.data.categories;
+        productsAPI.value = res.data.data.products;
         if (categoriesAPI.value.length > 0) {
             selectedCategory.value = categoriesAPI.value[0];
         }
@@ -35,17 +46,27 @@ const selectCategory =  (cat) => {
     console.log(cat, 'selected');
    selectedCategory.value = cat
 }
+
 // التنقل للتفاصيل
 const goToDetails = (productId) => {
-  router.push({ name: "product", params: {  id: productId } });
+  router.push({ name: "product", params: {  product_id: productId } });
 }
+
+
 // إضافة للسلة
-const addToCart = async (product_id) => {
-  await cartApi.add(product_id, 1);
-  showToast('تم إضافة المنتج الى السة');
+const addToCart = async (productId) => {
+    adding.value = true;
+    console.log("Adding product to cart:", productId);
+    try {
+        await cartApi.add(productId, 1);
+        showToast('تمت إضافة المنتج للسلة ✓');
+    } catch (e) {
+        console.error(e.response || e);
+        showToast('حدث خطأ أثناء الإضافة', 'error');
+    } finally {
+        adding.value = false;
+    }
 }
-
-
 
 //المنتجات  المعروضة )(ال3 الاولى)
 const previewProducts = computed(() => {
@@ -98,7 +119,16 @@ const getPrimaryImage = (product) => {
                           <h3 class=" text-sm font-semibold">{{ product.name }}</h3>
                           <p class=" text-sm ">{{ product.price }} ر.س</p>
                           <button title="عرض تفاصيل المنتج" @click="goToDetails(product.id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-3 py-1 rounded m-1"><i class="fas fa-eye"></i></button>
-                          <button title="  إضافة المنتج إلى السلة" @click="addToCart(product.id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-3 py-1 rounded "> <i class="fas fa-cart-plus"></i></button>
+                          <button 
+                          @click="addToCart(product.id)" 
+                          :disabled="adding"  title="  إضافة المنتج إلى السلة" 
+                          :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" 
+                          class="px-3 py-1 rounded ">
+                            <span v-if="!adding">
+                            <i class="fas fa-cart-plus"></i>
+                          </span>
+                          <span v-else class="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full inline-block"></span>
+                          </button>
                       </div>
                   </div>
                   

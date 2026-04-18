@@ -1,11 +1,16 @@
 import { defineStore } from "pinia";
 import authApi from "../api/authApi";
 import router from "../router";
+import { useCartStore } from "../stores/cart";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: null,
   }),
+   setup() {
+    const cartStore = useCartStore()
+    return { cartStore }
+  },
 
   actions: {
     async fetchUser() {
@@ -17,6 +22,7 @@ export const useAuthStore = defineStore("auth", {
 
       this.user = res.data.user
          localStorage.setItem("token", res.data.token);
+         await cartStore.loadCart();
       this.redirectAfterLogin()
     },
 
@@ -25,7 +31,8 @@ export const useAuthStore = defineStore("auth", {
 
       this.user = res.data.user
        localStorage.setItem("token", res.data.token); 
-
+         // 🔥 إعادة تحميل السلة بعد تسجيل الدخول
+      await cartStore.loadCart();
       this.redirectAfterLogin()
     },
        redirectAfterLogin() {

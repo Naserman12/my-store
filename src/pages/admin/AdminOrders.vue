@@ -6,8 +6,10 @@
 <h1 class="text-2xl font-bold">
 📦 إدارة الطلبات
 </h1>
-
-<table class="w-full bg-white rounded-xl shadow">
+            <template v-if="loading">
+            <skeleton-product v-for="n in 4" :key="n"/>
+          </template>
+<table v-if="!loading" class="w-full bg-white rounded-xl shadow">
 
 <thead class="border-b">
 <tr class="text-right">
@@ -21,11 +23,8 @@
 </thead>
 
 <tbody>
-          <template v-if="loading">
-            <skeleton-product v-for="n in 4" :key="n"/>
-          </template>
-<tr v-for="order in orders" :key="order.id" class="border-b">
-
+    
+<tr  v-for="order in orders" :key="order.id" class="border-b">
 <td>{{ order.id }}</td>
 
 <td>
@@ -50,7 +49,6 @@ class="border rounded-lg px-3 py-2"
 <option value="shipped">تم الشحن</option>
 <option value="delivered">تم التسليم</option>
 <option value="cancelled">ملغي</option>
-
 </select>
 
 <button
@@ -81,11 +79,6 @@ class="border rounded p-2"
 :value="order.status"
 @change="changeStatus(order.id, $event.target.value)"
 >
-<!-- <option value="pending">بانتظار المعالجة</option>
-<option value="processing">جاري التجهيز</option>
-<option value="shipped">تم الشحن</option>
-<option value="delivered">تم التسليم</option>
-<option value="cancelled">ملغي</option> -->
 <span
 :class="{
   'text-yellow-600': order.status === 'pending',
@@ -122,9 +115,6 @@ const store = useAdminOrdersStore();
 const selectedStatus = ref('');
 const loading = ref(true);
 
-onMounted(() => {
-  store.fetchOrders()
-})
 const order = ref(null);
 const orders = computed(() => store.orders)
 
@@ -134,15 +124,22 @@ const changeStatus = (id, status) => {
 const updateStatus = async () => {
 
   await store.updateStatus(order.value.id, selectedStatus.value)
-
   showToast('تم تحديث الحالة ✅')
 }
 watch(order, (val) => {
-  loading.value =true
   if (val) selectedStatus.value = val.status
+  
 })
+onMounted(() => {
+  setTimeout(() => 
+  loading.value =false
+  , 3000);
+  loading.value = true,
+  store.fetchOrders()
+  console.log(orders.value)
+})
+
 
 const formatDate = (date) =>
   new Date(date).toLocaleDateString()
-
 </script>

@@ -12,6 +12,7 @@
                           <router-link to="/wishlist">
   ❤️
                 </router-link>
+                <logout-btn />
                     </ul>
                 <!-- إيقونة السلة -->
                  <div class=" felx items-center gap-4 right-0">
@@ -146,12 +147,12 @@ import DarkLogo from '../assets/images/myStoreDark.png';
 import lightLogo from '../assets/images/myStoreLight.png';
 import searchBtn from "./searchBtn.vue";
 import Search from "../pages/Search.vue";
+import LogoutBtn from "../pages/auth/LogoutBtn.vue";
 import { useDarkMode } from "./useDarkMode.js";
 
 const {darkMode, toggleMode} = useDarkMode();
 // القائمة الجانبية
 const target = ref(null); 
-
 onClickOutside(target, () => {
     isOpen.value = false;
 })
@@ -159,6 +160,7 @@ const isOpen = ref(false);
 const toggleMenu = () => {
     isOpen.value = !isOpen.value;
 }
+
 // categoties
 const categoriesOpen = ref(false);
 const toggleCategories = () => {

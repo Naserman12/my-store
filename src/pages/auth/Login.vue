@@ -22,18 +22,19 @@ const login = async () => {
     try {
      loading.value = true;
     const res = await authStore.login(form);
+    showToast("اهلا  بعودتك", "success")
+    if (remember.value) {
+        localStorage.setItem('user', form.email)     
+    }
+    localStorage.setItem('user', JSON.stringify(res.data.user));
     setTimeout(() => {
-        showToast("اهلا  بعودتك", "success")
-        if (remember.value) {
-            localStorage.setItem('user', form.email)     
-        }
-        localStorage.setItem('user', JSON.stringify(res.data.user));
         loading.value = false; 
     }, 500);
   } catch (e) {
     error.value = "Login failed";
   }
 };
+
 </script>
 
 <template>

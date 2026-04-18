@@ -1,25 +1,15 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8000/api",
+  baseURL: "https://my-store-api-production-10d9.up.railway.app/api",
   headers: {
     Accept: "application/json",
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
   },
 });
 
+// Interceptor واحد فقط
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-
-/* ========= SESSION CART ========= */
-
-api.interceptors.request.use((config) => {
+  // session cart
   let sessionId = localStorage.getItem("session_id");
 
   if (!sessionId) {
@@ -29,8 +19,8 @@ api.interceptors.request.use((config) => {
 
   config.headers["X-Session-ID"] = sessionId;
 
+  // token
   const token = localStorage.getItem("token");
-
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

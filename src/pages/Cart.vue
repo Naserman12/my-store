@@ -1,123 +1,207 @@
 <template>
-    <div class="p-6 max-w-6xl mx-auto grid md:grid-cols-2 gap-6">
-        <h1 class=" text-xl font-bold mb-4 text-center">
-             ملخص الطلب 🛒
-        </h1>
-        <!-- قائمة المنتجات -->
-         <div v-if="cart.length" class=" text-3xl font-bold mb-4 text-center">
-            <div v-for="item in cart" :key="item.id" class="flex justify-between border-b py-3">
-                <div class="flex-1">
-                    <p class=" font-semibold">{{ item.name }}</p>
-                    <p class=" text-gray-700">الكمية: {{ item.quantity }}</p>
-                    <p class="text-gray-700">الاسعر الاساسي: {{ item.oldPrice }} ر.س</p>
-                    <p class="text-gray-700">الخصم: {{ item.discount }}% ر.س</p>
-                    <p class="text-gray-700">السعر: {{ item.newPrice }} ر.س</p>
-                     <!-- التحكم بالكمية واضافة للسلة -->
-                      <div class="flex flex-col justify-between mb-6 p-4 rounded-lg">
-                        <div class="flex items-center mb-4 sm:mb-0">
-                            <span class=" font-semibold ml-3">الكمية:</span>
-                            <div class="flex items-center border border-amber-50 rounded-md overflow-hidden bg-white">
-                                <button @click="cartStore.decreaseQuantity(item.id)" class=" px-3 py-1 bg-emerald-100 hover:text-amber-50 hover:bg-red-600 transition-colors" >
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <span class="px-4 py-2 w-12 text-center">{{ item.quantity }}</span>
-                                <button @click="cartStore.increaseQuantity(item.id)" class="px-3 py-1 bg-emerald-100 hover:bg-emerald-700 hover:text-amber-50 transition-colors">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            <button @click="handleDelete(item.id)" class="text-red-700 hover:underline"><i class="text-red-700 hover:underline"></i></button>
-                        </div>
-                    </div>
+  <div class="p-6 max-w-5xl mx-auto">
+
+    <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">
+      🛒 ملخص الطلب
+    </h1>
+
+    <div class="grid md:grid-cols-2 gap-6">
+
+      <!-- قائمة المنتجات -->
+      <div class="bg-white shadow-lg rounded-xl p-5">
+        <h2 class="text-xl font-bold mb-4 text-gray-700">المنتجات</h2>
+
+        <template v-if="loading">
+          <skeleton-product v-for="n in 4" :key="n" />
+        </template>
+
+        <div v-if="cart.length" class="space-y-4">
+
+          <div
+            v-for="item in cart"
+            :key="item.id"
+            class="border rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition"
+          >
+            <div class="flex justify-between items-start">
+
+              <div class="flex-1">
+                <p class="font-bold text-lg text-gray-800">{{ item.product.name }}</p>
+
+                <p class="text-gray-600 mt-1">الكمية: {{ item.quantity }}</p>
+                <p class="text-gray-600">السعر الأساسي: {{ item.product.price }} ر.س</p>
+                <p v-if="item.product.discount" class="text-gray-600">الخصم: {{ item.product.discount }}%</p>
+                <p v-if="item.product.sale_price" class="text-emerald-700 font-bold">السعر بعد الخصم: {{ item.product.sale_price }} ر.س</p>
+
+                <!-- التحكم بالكمية -->
+                <div class="flex items-center mt-4">
+                  <span class="font-semibold ml-3">الكمية:</span>
+
+                  <div class="flex items-center border rounded-md overflow-hidden bg-white shadow-sm">
+                    <button
+                      @click="cartStore.decreaseQuantity(item.id)"
+                      class="px-3 py-1 bg-red-100 hover:bg-red-400 hover:text-white transition"
+                    >
+                      <i class="fas fa-minus"></i>
+                    </button>
+
+                    <span class="px-4 py-2 w-12 text-center">{{ item.quantity }}</span>
+
+                    <button
+                      @click="cartStore.increaseQuantity(item.id)"
+                      class="px-3 py-1 bg-emerald-100 hover:bg-emerald-400 hover:text-white transition"
+                    >
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+
+                  <button
+                    @click="handleDelete(item.id)"
+                    class="text-gray-600 mr-1 hover:bg-red-400 hover:text-white px-1 py-1 rounded transition"
+                  >
+                    <i class="fas fa-trash m-1"></i> 
+                  </button>
                 </div>
+              </div>
+
             </div>
-            <button @click="goBack" type="submit" class="mt-4 bg-gray-600 hover:bg-gray-700 m-2 text-amber-50 px-3 py-1.5 rounded-lg "> اكمل التسوق</button>
-            <p class="text-gray-700">الإجمالي: {{ totalPrice }} ر.س</p>
-            <!-- نموذج الدفع -->
-           <div class="mt-6 p-4 rounded-xl shadow">
-               <form @submit.prevent="nextStep">
-                   <h2 class="font-bold mb-2 text-2xl"> معلومات جهة الاتصال</h2>
-                   <p class=" font-semibold text-sm text-gray-500"> سوف يتم التواصل معك من خلال هذا الايميل وارسال التحديثات</p>
-                    <input
-                    v-model="checkout.shipping.email"
-                    placeholder="البريد الإلكتروني"
-                    class="w-full border p-2 rounded mb-3"
-                    />
-                   <!-- عرض العنوان إذا موجود -->
-                   <div v-if="checkout.shipping.address && !showAddressForm"
-                       class="bg-gray-100 p-3 rounded flex justify-between">
-    
-                   <span>{{ checkout.shipping.address }}</span>
-    
-                   <button
-                   type="button"
-                       @click="toggleAddress"
-                       class="text-emerald-600"
-                   >
-                       تعديل
-                   </button>
-                   </div>
-                   <!-- زر اضافة عنوان -->
-                   <button type="button"
-                   v-if="!showAddressForm && !checkout.shipping.address"
-                   @click="toggleAddress"
-                   class="text-emerald-600 font-semibold mb-3"
-                   >
-                   ➕ إضافة عنوان
-                   </button>
-                   <!-- الحقول المخفية -->
-                   <div v-if="showAddressForm" class="space-y-3">
-                   <input
-                    v-model="checkout.shipping.address"
-                    placeholder="العنوان"
-                    class="w-full border p-2 rounded"
-                    />
-    
-                   <button type="button"
-                       @click="toggleAddress"
-                       class="bg-emerald-600 text-white px-3 py-2 rounded"
-                   >
-                       حفظ العنوان
-                   </button>
-                   </div>
-                   
-                   <h3 class="font-bold mt-5 mb-2">🚚 طريقة الشحن</h3>
-                   <!-- <label class="block mb-2">العنوان:</label>
-                   <input v-model="checkout.shipping.address" type="text" class="w-full border p-2 rounded mb-3" required /> -->
-                   <label class="block mb-2">القسيمة (إختياري):</label>
-                   <input v-model="checkout.shipping.coupon" type="text" class="w-full border p-2 rounded mb-3" />
-                   <h3 class=" font-bold mb-2">خيارات الشحن</h3>
-                   <div class="mb-3 space-y-2">
-                       <label class="block"><input type="radio" v-model="checkout.shipping.shippingMethod" value="free"  @change="checkout.setShippingMethod('free')"> 3-5 أيام عمل شحن مجاني</label>
-                       <label class="block"><input type="radio" v-model="checkout.shipping.shippingMethod" value="mrsool"  @change="checkout.setShippingMethod('mrsool')">مرسول (سريع)</label>
-                       <label class="block"><input type="radio" v-model="checkout.shipping.shippingMethod" value="store"  @change="checkout.setShippingMethod('store')"> استلام من متجر معتمد </label>
-                       <label class="block"><input type="radio" v-model="checkout.shipping.shippingMethod" value="ourStore"  @change="checkout.setShippingMethod('ourStore')"> استلام من متجرنا (موصى به)</label>
-                   </div>
-                   <p class=" font-bold">الإجمالي: {{ totalPrice }} ر.س</p>
-                   <button type="submit" class="mt-4 bg-emerald-600 hover:bg-emerald-700 text-amber-50 px-4 py-2 rounded-lg ">إتمام الطلب</button>
-               </form>
-           </div> 
-               <!-- طرق الدفع -->
-                <div class="mt-6 border-t pt-4">
-    
-               <h3 class="font-semibold mb-3">
-               💳 طرق الدفع المدعومة
-               </h3>
-    
-               <div class="flex gap-4 flex-wrap">
-    
-               <img src="https://img.icons8.com/color/48/visa.png"/>
-               <img src="https://img.icons8.com/color/48/mastercard.png"/>
-               <img src="https://img.icons8.com/color/48/amex.png"/>
-               <img src="https://img.icons8.com/color/48/discover.png"/>
-               <img src="https://img.icons8.com/color/48/apple-pay.png"/>
-    
-               </div>
-    
-               </div>
         </div>
-        <p v-else>السلة فارغة.</p>
+        <p class="text-xl font-bold text-gray-800 mt-4">
+          الإجمالي: {{ totalPrice }} ر.س
+        </p>
+
+
+          <button
+            @click="goBack"
+            class="mt-4 bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg"
+          >
+            اكمل التسوق
+          </button>
+
+        </div>
+
+        <p v-if="cart.length < 1" class="text-center text-gray-500">
+          السلة فارغة.
+        </p>
+      </div>
+
+      <!-- نموذج الدفع -->
+      <div class="bg-white shadow-lg rounded-xl p-6">
+        <h2 class="text-2xl font-bold mb-4 text-gray-800">معلومات الدفع</h2>
+
+        <form @submit.prevent="nextStep" class="space-y-4">
+
+          <div>
+            <label class="font-semibold">البريد الإلكتروني</label>
+            <input
+              v-model="checkout.shipping.email"
+              placeholder="example@email.com"
+              class="w-full border p-2 rounded mt-1"
+            />
+          </div>
+
+          <!-- العنوان -->
+          <div>
+            <label class="font-semibold">العنوان</label>
+
+            <div
+              v-if="checkout.shipping.address && !showAddressForm"
+              class="bg-gray-100 p-3 rounded flex justify-between items-center mt-1"
+            >
+              <span>{{ checkout.shipping.address }}</span>
+              <button @click="toggleAddress" class="text-emerald-600 font-semibold">
+                تعديل
+              </button>
+            </div>
+
+            <button
+              v-if="!showAddressForm && !checkout.shipping.address"
+              @click="toggleAddress"
+              type="button"
+              class="text-emerald-600 font-semibold mt-1"
+            >
+              ➕ إضافة عنوان
+            </button>
+
+            <div v-if="showAddressForm" class="space-y-3 mt-2">
+              <input
+                v-model="checkout.shipping.address"
+                placeholder="العنوان"
+                class="w-full border p-2 rounded"
+              />
+
+              <button
+                type="button"
+                @click="toggleAddress"
+                class="bg-emerald-600 text-white px-3 py-2 rounded"
+              >
+                حفظ العنوان
+              </button>
+            </div>
+          </div>
+
+          <!-- القسيمة -->
+          <div>
+            <label class="font-semibold">القسيمة (اختياري)</label>
+            <input
+              v-model="checkout.shipping.coupon"
+              class="w-full border p-2 rounded mt-1"
+            />
+          </div>
+
+          <!-- الشحن -->
+          <div>
+            <h3 class="font-bold text-lg mb-2">🚚 خيارات الشحن</h3>
+
+            <div class="space-y-2">
+              <label class="flex items-center gap-2">
+                <input type="radio" value="free" v-model="checkout.shipping.shippingMethod">
+                شحن مجاني (3-5 أيام)
+              </label>
+
+              <label class="flex items-center gap-2">
+                <input type="radio" value="mrsool" v-model="checkout.shipping.shippingMethod">
+                مرسول (سريع)
+              </label>
+
+              <label class="flex items-center gap-2">
+                <input type="radio" value="store" v-model="checkout.shipping.shippingMethod">
+                استلام من متجر معتمد
+              </label>
+
+              <label class="flex items-center gap-2">
+                <input type="radio" value="ourStore" v-model="checkout.shipping.shippingMethod">
+                استلام من متجرنا (موصى به)
+              </label>
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg text-lg font-semibold"
+          >
+            إتمام الطلب
+          </button>
+
+        </form>
+
+        <!-- طرق الدفع -->
+        <div class="mt-6 border-t pt-4">
+          <h3 class="font-semibold mb-3">💳 طرق الدفع المدعومة</h3>
+
+          <div class="flex gap-4 flex-wrap">
+            <img src="https://img.icons8.com/color/48/visa.png" />
+            <img src="https://img.icons8.com/color/48/mastercard.png" />
+            <img src="https://img.icons8.com/color/48/amex.png" />
+            <img src="https://img.icons8.com/color/48/discover.png" />
+            <img src="https://img.icons8.com/color/48/apple-pay.png" />
+          </div>
+        </div>
+
+      </div>
+
     </div>
+  </div>
 </template>
+
 
 <script setup>
         import { useCartStore } from '../stores/cart';
@@ -126,6 +210,7 @@
         import { useDarkMode } from '../components/useDarkMode';
         import { showToast } from '../stores/toast';
         import { useCheckoutStore } from '../stores/checkout'
+        import SkeletonProduct from '../components/SkeletonProduct.vue';
         
         import cartApi from "../api/cart";
 
@@ -136,17 +221,18 @@
         const router = useRouter();
         // const cart = computed(()=> cartStore.cart)
         const cart = ref(1);
-
+        const loading = ref(true)
+        const totalPrice = ref(0);
         const loadCart = async () => {
+        loading.value = true;
         const res = await cartApi.getCart();
-        cart.value = res.data;
+        console.log("Cart data loaded:", res.data);
+        cart.value = res.data.items;  // Assuming the API returns an object with an 'items' array
+        totalPrice.value = res.data.total; // Assuming the API returns the total price
+        loading.value = false;
         };
         onMounted(loadCart);
-        const totalPrice = computed(()=> 
-        cartStore.cart.reduce(
-         (sum, item) => sum + item.newPrice * item.quantity,
-          0 )
-        );
+
         const showAddressForm = ref(false)
         function toggleAddress() {
         showAddressForm.value = !showAddressForm.value
