@@ -29,7 +29,7 @@ import { useDarkMode } from "./useDarkMode.js";
 
 const showChat = ref(false);
 const target = ref(null);
-const darkMode = useDarkMode();
+const { darkMode } = useDarkMode();
 
 onClickOutside(target, () => {
     if (showChat.value) { 

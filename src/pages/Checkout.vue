@@ -117,7 +117,6 @@ const selectAddress = (addr) => {
   form.shipping_postal_code = addr.postal_code;
 };
 
-
 const user = ref(null)
 const form = reactive({
   customer_name:"",

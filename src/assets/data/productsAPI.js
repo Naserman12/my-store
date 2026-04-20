@@ -11,9 +11,7 @@ export const categories = [
     {id: 7, name: "أزياء", image: "", icon: "/storeIcon"},
     {id: 8, name: "العاب", image: "",icon: "/storeIcon"},
 ];
-
 // src/data/products.js
-
 export const products = [
 // إلكترونيات  (٦
 {

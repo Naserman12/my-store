@@ -1,9 +1,9 @@
 <script setup>
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import authApi from "../../api/authApi";
 import { useAuthStore } from '../../stores/auth'
 import { showToast } from '../../stores/toast'
+import api from "../../api/api";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -18,22 +18,32 @@ const showPassword = ref(false)
 const loading = ref(false)
 const remember = ref(false)
 
+
+
 const login = async () => {
+   loading.value = true;
     try {
-     loading.value = true;
-    const res = await authStore.login(form);
-    showToast("اهلا  بعودتك", "success")
-    if (remember.value) {
-        localStorage.setItem('user', form.email)     
-    }
-    localStorage.setItem('user', JSON.stringify(res.data.user));
-    setTimeout(() => {
-        loading.value = false; 
-    }, 500);
+     const res = await authStore.login(form);
+     console.log("Login response =>", res)
+     showToast("اهلا  بعودتك", "success")
+     loading.value = false;
+
   } catch (e) {
+    console.log(e);
     error.value = "Login failed";
-  }
+      showToast("بيانات الدخول غير صحيحة", "error")
+      loading.value = false;
+    }
 };
+
+const loginWithGoogle = () => {
+    showToast('ميزة تسجيل الدخول عبر Google غير متاحة حاليا', 'info');
+    return;
+    // فتح نافذة تسجيل الدخول عبر Google
+    // const googleAuthUrl = `${import.meta.env.VITE_API_BASE_URL}/auth/google/redirect`;
+    // window.location.href = googleAuthUrl;
+
+}
 
 </script>
 
@@ -41,11 +51,13 @@ const login = async () => {
     <div class="min-h-screen flex items-center justify-center bg-gray-200 px-4">
         <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-6">
             <h2 class="text-2xl font-bold text-center">تسجيل الدخول</h2>
+            <form @submit.prevent="login">
             <!-- Email field -->
             <div class="mb-4">
-                <label for="email" class=" block mb-1 text-sm">الريد الألكتروني</label>
+                <label for="email" class=" block mb-1 text-sm">البريد الألكتروني</label>
                 <input 
                 v-model="form.email"
+                autocomplete="username"
                 type="email"
                 class="w-full border rounded-lg px-3 py-2 focus:right-2 focus:ring-blue-500 outline-none" placeholder="example@mail.com"
                 />
@@ -59,6 +71,7 @@ const login = async () => {
                 <input 
                 v-model="form.password"
                 :type="showPassword ? 'text' : 'password'"
+                autocomplete="current-password"
                 class="w-full border rounded-lg px-3 py-2 pr-10 focus:right-2 focus:ring-blue-500 outline-none" placeholder="********"
                 />
                 <!-- Password visibility toggle -->
@@ -82,7 +95,7 @@ const login = async () => {
                 </p>
             <!-- login button -->
              <button
-             @click="login"
+             type="submit"
              :disabled="loading"
              class=" w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition flex justify-center items-center"
              >
@@ -96,6 +109,7 @@ const login = async () => {
                  <div class="my-5 text-center text-gray-400">أو</div>
                  <!-- Google Login -->
                   <button
+                    type="button"
                   @click="loginWithGoogle"
                   class="w-full border py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50"
                   >
@@ -109,7 +123,8 @@ const login = async () => {
           سجل الأن 
         </RouterLink>
       </p>
-        </div>
+      </form>    
+    </div>
     </div>
 </template>
 

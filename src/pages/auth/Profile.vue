@@ -10,7 +10,6 @@
 
       <!-- القائمة الجانبية -->
       <div class="bg-white shadow rounded-xl p-5 space-y-3">
-
         <button
           v-for="item in menu"
           :key="item"
@@ -25,9 +24,10 @@
 
         <button
           @click="logout"
-          class="w-full text-right p-3 rounded-lg hover:bg-gray-100 transition text-red-500"
+          class="w-full text-right p-3 rounded-lg hover:bg-amber-100 transition text-red-500"
         >
-          تسجيل الخروج
+        <logout-btn />
+         
         </button>
 
       </div>
@@ -42,7 +42,7 @@
               <div class="relative cursor-pointer" @click="selectImage">
 
             <img
-            :src="avatarPreview || userAvatar"
+            :src="userAvatar || avatarPreview || defaultAvatar"
             class="w-16 h-16 rounded-full object-cover"
             />
 
@@ -55,6 +55,7 @@
         </div>
                 <input
             type="file"
+            accept="image/*"
             ref="fileInput"
             class="hidden"
             @change="uploadAvatar"
@@ -277,18 +278,24 @@
 
 <script setup>
 import { reactive, onMounted, ref, watch } from "vue"
-import axios from "../../api/api"
+import api from "../../api/api"
 import { showToast } from '../../stores/toast'
-
+import { useRouter } from "vue-router"
+import { useAuthStore } from '../../stores/auth'
+import LogoutBtn from "./LogoutBtn.vue"
 
 
 const editingAddress = ref(null)
 const addresses = ref([])
 const activeTab = ref('معلوماتي')
 const fileInput = ref(null)
-const avatarPreview = ref('https://i.pravatar.cc/100')
+const avatarPreview = ref(null)
+const defaultAvatar = 'https://i.pravatar.cc/100'
 const userAvatar = ref(null)
 const showAddressForm = ref(false)
+const router = useRouter();
+const user = ref(null);
+const authStore = useAuthStore();
 
 const orders = ref([])
 const selectedOrder = ref(null)
@@ -328,67 +335,75 @@ const password = reactive({
   password_confirmation:""
 })
 
+//  تحميل بيانات الملف الشخصي
+  const loadProfile = async () => {
+    try {
+    const res = await api.get("/profile");
+    user.value = res.data.data || res.data.user || res.data;
+    console.log("Profile data =>", user.value)
+    form.name = user.value.name
+    form.email = user.value.email
+    form.phone = user.value.phone
+    if (user.value.avatar) {
+      userAvatar.value = user.value.avatar
+        console.log(userAvatar.value, 'User avatar URL' , user.value.avatar)
+    }
+    } catch (e) {
+      console.log("ERROR FULL:", e)
+      console.log("ERROR RESPONSE:", e.response)
+      console.log("ERROR DATA:", e.response?.data)
+      showToast("حدث خطأ أثناء تحميل بيانات الملف الشخصي", "error")
+      router.push("/login")
+    }
+  }
+
 // رفع صورة الملف الشخصي
 const uploadAvatar = async (e) => {
 
   const file = e.target.files[0]
-  if (!file) return
-
+    if (!file) { showToast("لم يتم اختيار ملف", "error") }  ;
   avatarPreview.value = URL.createObjectURL(file)
 
   const formData = new FormData()
   formData.append("avatar", file)
-
-  const res = await axios.post("/profile/avatar", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data"
-    }
-  })
-
-  userAvatar.value =
-    import.meta.env.VITE_API_URL + "/storage/" + res.data.avatar
-
-  showToast("تم تحديث الصورة ✅")
-}
-
-//  تحميل بيانات الملف الشخصي
-const loadProfile = async () => {
-  const res = await axios.get("/profile")
-  form.name = res.data.name
-  form.email = res.data.email
-  form.phone = res.data.phone
-   if (res.data.avatar) {
-    userAvatar.value =
-      import.meta.env.VITE_API_URL + "/storage/" + res.data.avatar
+  try {
+    const res = await api.post("/profile/avatar", formData)
+    console.log("FULL RESPONSE =>", res)
+    console.log("Avatar upload response =>", res.data)
+    console.log("New avatar URL =>", res.data.avatar)
+    
+    userAvatar.value = res.data.avatar
+    user.value.avatar = res.data.avatar
+    showToast("تم تحديث الصورة ✅")
+  } catch (e) {
+    console.log('Error uploading avatar:', e.response?.data)
+    showToast("فشل رفع الصورة ❌", "error")
   }
+
 }
+
 // تحديث بيانات الملف الشخصي
 const updateProfile = async () => {
-    const res = await axios.get("/profile")
-    if (form.email === res.data.email && form.name === res.data.name) {
-      showToast('لا توجد تغييرات لتحديثها')
-      return
-    }
-  await axios.put("/profile", form) 
+  await api.put("/profile", form) 
   showToast('تم تحديث البيانات ✅')
 }
 
 // تحديث كلمة المرور
 const updatePassword = async () => {
-  await axios.put("/profile/password", password)
+  await api.put("/profile/password", password)
   showToast('تم تحديث كلمة المرور ✅')
 }
 const loadAddresses = async () => {
-  const res = await axios.get("/addresses")
+  const res = await api.get("/addresses")
   addresses.value = res.data
 }
 // حفظ العنوان الجديد أو المعدل
 const saveAddress = async () => {
   if (editingAddress.value) {
     console.log(["تعديل العنوان", editingAddress.value.id], ['user_id =>', editingAddress.value.user_id])
-    await axios.put(`/addresses/${editingAddress.value.id}`, addressForm)
+    await api.put(`/addresses/${editingAddress.value.id}`, addressForm)
   } else {
-    await axios.post("/addresses", addressForm)
+    await api.post("/addresses", addressForm)
   }
   showToast("تم حفظ العنوان ✅");
   loadAddresses();
@@ -397,7 +412,7 @@ const saveAddress = async () => {
 }
 // حذف العنوان
 const deleteAddress = async (id) => {
-  await axios.delete(`/addresses/${id}`)
+  await api.delete(`/addresses/${id}`)
   loadAddresses()
   showToast("تم حذف العنوان", "info")
 }
@@ -425,7 +440,7 @@ const closeAddressForm = () => {
 
 // تحميل الطلبات
  const loadOrders = async () => {
-  const res = await axios.get("/auth/my-orders")
+  const res = await api.get("/auth/my-orders")
   orders.value = res.data
 }
 watch(activeTab,(val)=>{
@@ -433,6 +448,16 @@ watch(activeTab,(val)=>{
     loadOrders()
   }
 })
-onMounted(loadProfile)
+onMounted(() => {
+  console.log("Mounted profile page")
+  const token = localStorage.getItem("token");
+  console.log("Token =>", token)
+  if (!token) {
+    router.push("/login");
+    return;
+  }
+  loadProfile();
+});
+
 </script>
 

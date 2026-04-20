@@ -168,7 +168,8 @@
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <button
             type="submit"
-            class="w-full md:w-auto bg-emerald-600 text-white rounded-full px-6 py-3 hover:bg-emerald-700"
+            :disabled="loading"
+            class=" w-full bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700 transition flex justify-center items-center"
           >
             <span v-if="!loading"> {{ isEditing ? 'حفظ التعديلات' : 'حفظ المنتج' }} </span>
                 <!-- spinner -->

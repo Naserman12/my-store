@@ -7,17 +7,14 @@ export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: null,
   }),
-   setup() {
-    const cartStore = useCartStore()
-    return { cartStore }
-  },
-
   actions: {
     async fetchUser() {
+      const cartStore = useCartStore()
       const res = await authApi.me();
       this.user = res.data;
     },
       async register(form) {
+      const cartStore = useCartStore()
       const res = await authApi.register(form)
 
       this.user = res.data.user
@@ -27,13 +24,33 @@ export const useAuthStore = defineStore("auth", {
     },
 
     async login(form) {
+      try { 
+      const cartStore = useCartStore()
       const res = await authApi.login(form)
+      console.log("Login response =>", res.data)
+         // تأكد أن البيانات موجودة
+      if (!res.data || !res.data.user || !res.data.token) {
+        showToast("بيانات تسجيل الدخول غير صحيحة", "error")
+        return
+      }
 
-      this.user = res.data.user
-       localStorage.setItem("token", res.data.token); 
+    // تخزين المستخدم
+    this.user = res.data.user
+    localStorage.setItem("user", JSON.stringify(this.user))
+    if (!this.user) {
+        showToast("حدث خطأ أثناء تسجيل الدخول", "error")
+        return;
+      }
+      localStorage.setItem("token", res.data.token); 
          // 🔥 إعادة تحميل السلة بعد تسجيل الدخول
       await cartStore.loadCart();
       this.redirectAfterLogin()
+        } catch (e) {
+    console.log("Login error =>", e)
+    showToast("بيانات تسجيل الدخول غير صحيحة", "error")
+    return null
+  }
+
     },
        redirectAfterLogin() {
 

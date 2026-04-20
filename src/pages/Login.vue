@@ -115,19 +115,19 @@ const login = async() => {
      loading.value = true
 
      // Simulate API call
-     if (email.value === 'admin@gmail.com' && password.value === '123456') {
-         showToast('تم تسجيل الدخول بنجاح', 'success');
-         if (remember.value) {
-             localStorage.setItem('user', JSON.stringify({ email: email.value }));
-         }
-     }
-     else {
-         showToast('بيانات الدخول غير صحيحة', 'error');
-
-     }
      setTimeout(() => {
         loading.value = false
-    }, 500)
+        if (email.value === 'admin@gmail.com' && password.value === '123456') {
+            showToast('تم تسجيل الدخول بنجاح', 'success');
+            if (remember.value) {
+                localStorage.setItem('user', JSON.stringify({ email: email.value }));
+            }
+        }
+        else {
+            showToast('بيانات الدخول غير صحيحة', 'error');
+
+        }
+    }, 2000)
 }
 const loginWithGoogle = () => {
     showToast('ميزة تسجيل الدخول عبر Google غير متاحة حاليا', 'info');

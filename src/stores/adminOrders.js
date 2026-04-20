@@ -33,16 +33,15 @@ export const useAdminOrdersStore = defineStore('adminOrders', {
   this.loading = false
 },
 
-    async updateStatus(id, status) {
+  async updateStatus(id, status) {
       await axios.patch(`/admin/orders/${id}`, {
-        status
+          status
          // تحديث مباشر بدون إعادة fetch
         })
         if (this.order && this.order.id === id) {
             this.order.status = status
         }
-
-      await this.fetchOrders()
+      await this.fetchOrders();
     }
 
   }

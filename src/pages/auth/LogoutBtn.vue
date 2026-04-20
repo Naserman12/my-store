@@ -1,9 +1,10 @@
 <template>
   <button 
     @click="logout" 
-    class="text-red-600 font-bold underline"
+    class="text-gray-100 bg-gray-500 p-0.5 font-bold underline"
   >
-    تسجيل الخروج
+  <i class="fas fa-sign-out-alt text-gray-100  m-2"></i>
+  تسجيل الخروج
   </button>
 </template>
 
@@ -13,15 +14,12 @@ import api from "../../api/api"
 import { showToast } from "../../stores/toast"
 
 const router = useRouter()
-
 const logout = async () => {
   try {
     await api.post("/auth/logout")
-
-    localStorage.removeItem("token")
-
+    localStorage.removeItem("token", null)
+    localStorage.removeItem("user", null)
     showToast("تم تسجيل الخروج بنجاح")
-
     router.push("/login")
   } catch (err) {
     console.log(err)

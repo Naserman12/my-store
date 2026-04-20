@@ -36,6 +36,7 @@
 </td>
 <!-- تحديث الحالة -->
 <div class="bg-white p-4 rounded-xl shadow flex items-center gap-4">
+      
 
 <h2 class="font-bold">حالة الطلب:</h2>
 
@@ -122,7 +123,7 @@ const changeStatus = (id, status) => {
   store.updateStatus(id, status)
 }
 const updateStatus = async () => {
-
+  order.value.status = selectedStatus.value
   await store.updateStatus(order.value.id, selectedStatus.value)
   showToast('تم تحديث الحالة ✅')
 }
