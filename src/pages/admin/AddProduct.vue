@@ -112,9 +112,9 @@
             <span class="text-sm font-medium">صورة المنتج</span>
             <input
               type="file"
-              accept="image/*"
-              @change="onImageChange"
-              class="mt-2 w-full rounded-2xl border px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-300"
+                multiple
+                @change="handleImages"             
+               class="mt-2 w-full rounded-2xl border px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-300"
             />
           </label>
 
@@ -148,7 +148,7 @@
               class="flex items-center gap-3"
             >
               <input
-                v-model="form.features[feature]"
+                v-model="form.features[index]"
                 type="text"
                 required
                 placeholder="اكتب الميزة"
@@ -164,7 +164,7 @@
             </div>
           </div>
         </div>
-
+        
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <button
             type="submit"
@@ -184,22 +184,14 @@
         </div>
       </form>
 
-      <!-- <div v-if="savedProduct" class="mt-8 p-5 rounded-3xl bg-emerald-50 text-emerald-900">
-        <h2 class="text-xl font-semibold mb-3">تم إضافة المنتج بنجاح</h2>
-        <p><strong>اسم المنتج:</strong> {{ savedProduct.name }}</p>
-        <p><strong>الكمية:</strong> {{ savedProduct.quantity }}</p>
-        <p class="mt-3"><strong>الوصف:</strong> {{ savedProduct.description }}</p>
-        <div v-if="savedProduct.features.length" class="mt-3">
-          <strong>الميزات:</strong>
-          <ul class="list-disc list-inside">
-            <li v-for="(item, idx) in savedProduct.features" :key="idx">{{ item }}</li>
-          </ul>
-        </div>
-        <div v-if="savedProduct.imagePreview" class="mt-4">
-          <strong>معاينة الصورة:</strong>
-          <img :src="`http://localhost:8000/storage/${savedProduct.image}`"  alt="صورة المنتج" class="mt-3 w-full max-w-sm rounded-2xl shadow" />
-        </div>
-      </div> -->
+      <div class="flex gap-2 mt-3">
+    <img
+      v-for="(img, i) in previewImages"
+      :key="i"
+      :src="img"
+      class="w-20 h-20 object-cover rounded"
+    />
+  </div>
     </div>
   </div>
 </template>
@@ -208,6 +200,7 @@
 import { computed, onMounted, ref, watch  } from 'vue';
 import { showToast } from '../../stores/toast';
 import axios from '../../api/api'
+import productsApi from '../../api/productsApi';
 
 const props = defineProps({
   product: {
@@ -227,6 +220,11 @@ const isEditing = computed(() => props.product !== null);
 console.log('isEditing:', isEditing.value, 'editingId:', editingId.value)
 const emit = defineEmits(['saved']);
 
+const images = ref([])
+
+// function handleImages(e) {
+//   images.value = Array.from(e.target.files)
+// }
 
 // نموذج بيانات المنتج الجديد
 const form = ref({
@@ -240,7 +238,7 @@ const form = ref({
   description: '',
   is_featured: false,
   is_hidden: false,
-  image: null,
+  images: null,
   features: [''],
 });
 // وظيفة إعادة تعيين النموذج بعد الإضافة الناجحة
@@ -257,7 +255,7 @@ const resetForm = () => {
       description: '',
       is_featured: false,
       is_hidden: false,
-      image: null,
+      images: null,
       features: [''],
     }
   }
@@ -280,6 +278,25 @@ const removeFeature = (index) => {
     form.value.features.splice(index, 1);
   }
 }
+// وظيفة رفع الصور بعد إضافة المنتج بنجاح
+const uploadImages = async (productId) => {
+  const formData = new FormData()
+
+  images.value.forEach((file) => {
+    formData.append("images[]", file)
+  })
+
+  await axios.post(`/admin/products/${productId}/images`, formData)
+
+  showToast("تم رفع الصور ✅")
+}
+const currentImage = ref("")
+// عرض أول صورة تلقائياً عند تحميل بيانات المنتج
+onMounted(() => {
+  if (props.product && props.product.images && props.product.images.length > 0) {
+    currentImage.value = props.product.images[0].image_url || ''
+  }
+})
 
 // عند وصول بيانات المنتج → نملأ النموذج
 watch(
@@ -298,7 +315,7 @@ watch(
         description: newVal.description,
         is_featured: newVal.is_featured,
         is_hidden: newVal.is_hidden,
-        image: null,
+        image: newVal.images?.[0]?.image_url || null,
         features: newVal.features?.length ? [...newVal.features] : [''],
       };
     } else {
@@ -357,6 +374,10 @@ const submitProduct = async () => {
       );
               showToast('تم إضافة المنتج بنجاح 🎉');
     }
+    const productId = res.data.data?.id || res.data.id
+    if (images.value.length > 0) {
+      await uploadImages(productId)
+    }
     console.log(res.data)
     savedProduct.value = res.data
     showToast('تم إضافة المنتج بنجاح 🎉')
@@ -365,7 +386,7 @@ const submitProduct = async () => {
     resetForm()
      emit('saved', res.data);
   } catch (e) {
-        console.error('Error:', e);
+        console.error('Error:', e.response?.data?.message || e.response?.data?.error);
         const message = e.response?.data?.message || e.response?.data?.error || 'حدث خطأ أثناء الإضافة';
         toastText.value = message;
         showToast1.value = true;
@@ -376,6 +397,16 @@ const submitProduct = async () => {
   }finally {
         loading.value = false;
     }
+}
+// 
+const previewImages = ref([])
+//  عرض الصور قبل الرفع
+function handleImages(e) {
+  images.value = Array.from(e.target.files)
+
+  previewImages.value = images.value.map(file =>
+    URL.createObjectURL(file)
+  )
 }
 
 // تحميل التصنيفات من السيرفر

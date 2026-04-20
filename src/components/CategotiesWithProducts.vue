@@ -111,7 +111,7 @@ const getPrimaryImage = (product) => {
                   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                       <div v-for="product in  previewProducts" :key="product.id" class=" rounded-xl shadow p-3 text-center hover:scale-105 transition">
                           <img 
-                           :src="getPrimaryImage(product)"
+                           :src="product.iamge"
                            @error="$event.target.src = '/fallback.png'"
                            class="h-24 mx-auto mb-4 opacity-0 transition duration-700" 
                            alt="product image">

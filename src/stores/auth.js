@@ -6,7 +6,11 @@ import { useCartStore } from "../stores/cart";
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: null,
+    token: localStorage.getItem('token') || null,
   }),
+  getters: {
+    isLoggedIn: (state) => !!state.token
+  },
   actions: {
     async fetchUser() {
       const cartStore = useCartStore()

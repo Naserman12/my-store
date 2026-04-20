@@ -186,6 +186,14 @@ const filteredProducts = computed(() => {
     return matchesSearch && matchesCategory;
   });
 });
+// 
+const currentImage = ref("")
+
+onMounted(() => {
+  if (productsAPI.value.images) {
+    currentImage.value = productsAPI.value.images.image_url
+  }
+})
 // open Edit form
 function openEdit(product){
   editingProduct.value = product;

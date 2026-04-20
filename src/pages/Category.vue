@@ -1,5 +1,5 @@
 <!-- pages/Category.vue -->
-<template>
+<template class="w-full h">
   <div class="p-4">
     <h2 class="text-2xl font-bold mb-4">{{ categoryName }}</h2>
      <div  v-if="loading" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">

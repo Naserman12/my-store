@@ -1,49 +1,30 @@
-// import { defineStore } from 'pinia'
-// import axios from 'axios'
+// stores/wishlist.js
+import { defineStore } from 'pinia'
+import api from '../api/api'
 
-// export const useWishlistStore = defineStore('wishlist', {
+export const useWishlistStore = defineStore('wishlist', {
+  state: () => ({
+    items: []
+  }),
 
-//     state: () => ({
-//         items: [],
-//         loading:false
-//     }),
-
-//     getters:{
-//         isInWishlist:(state)=>(productId)=>{
-//             return state.items.some(p => p.id === productId)
-//         }
-//     },
-
-//     actions:{
-
-//         async fetchWishlist(){
-//             this.loading = true
-
-//             const res = await axios.get('/api/wishlist')
-
-//             this.items = res.data
-
-//             this.loading = false
-//         },
-
-//         async toggle(product){
-
-//             // remove
-//             if(this.isInWishlist(product.id)){
-//                 await axios.delete(`/api/wishlist/${product.id}`)
-
-//                 this.items =
-//                     this.items.filter(p=>p.id !== product.id)
-
-//                 return
-//             }
-
-//             // add
-//             await axios.post('/api/wishlist',{
-//                 product_id: product.id
-//             })
-
-//             this.items.push(product)
-//         }
-//     }
-// })
+  getters: {
+    isInWishlist: (state) => (productId) => {
+      return state.items.some(i => i.product_id === productId)
+    }
+  },
+  actions: {
+    async loadWishlist() {
+      const res = await api.get('/auth/wishlist')
+      this.items = res.data
+    },
+    async toggle(productId) {
+      if (this.isInWishlist(productId)) {
+        await api.delete(`/auth/wishlist/${productId}`)
+        this.items = this.items.filter(i => i.product_id !== productId)
+      } else {
+        const res = await api.post('/auth/wishlist', { product_id: productId })
+        this.items.push(res.data)
+      }
+    }
+  }
+})
