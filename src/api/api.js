@@ -7,22 +7,24 @@ const api = axios.create({
   },
 });
 
-// Interceptor واحد فقط
 api.interceptors.request.use((config) => {
-  // session cart
+
+  const token = localStorage.getItem("token");
+
+  // 🔥 دائما جهز session_id
   let sessionId = localStorage.getItem("session_id");
 
-  if (!sessionId) {
+  if (!sessionId || sessionId === "null") {
     sessionId = crypto.randomUUID();
     localStorage.setItem("session_id", sessionId);
   }
 
   config.headers["X-Session-ID"] = sessionId;
 
-  // token
-  const token = localStorage.getItem("token");
+  // 🔥 لو فيه login
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+
   }
 
   return config;

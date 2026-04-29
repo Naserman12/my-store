@@ -1,0 +1,1 @@
+import{_ as a,b as r,n as o,o as s}from"./index-CEGj2-nS.js";const t={},n=["src"];function c(e,i,p,l,d,u){return s(),r("iframe",{src:`my-store-api-production-904a.up.railway.app/api/auth/invoice/${e.$route.params.id}`,class:o([e.darkMode?"bg-gray-900 text-white":"bg-gray-100 text-gray-800","w-full h-screen border"])},null,10,n)}const f=a(t,[["render",c]]);export{f as default};

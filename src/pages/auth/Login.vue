@@ -23,8 +23,8 @@ const remember = ref(false)
 const login = async () => {
    loading.value = true;
     try {
-     const res = await authStore.login(form);
-     console.log("Login response =>", res)
+     await authStore.login(form);
+    //  console.log("Login response =>", res)
      showToast("اهلا  بعودتك", "success")
      loading.value = false;
 

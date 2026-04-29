@@ -5,7 +5,7 @@
   >
   
     <div  class="bg-emerald-200 m-1 rounded-2xl">
-      <img src="../assets/images/myStoreLogo.png" alt="صورة" class="h-80 w-full  object-cover rounded-2xl text-center items-center" />
+      <img @click="goToCategory(category.id)" src="../assets/images/myStoreLogo.png" alt="صورة" class="h-80 w-full  object-cover rounded-2xl text-center items-center" />
     </div>
     <div  :class="darkMode ? 'bg-emerald-500 text-amber-50' : 'bg-emerald-50 '" class="m-0.5 rounded-2xl  p-1 text-center font-semibold">
       <h3 class="text-right text-xl ">{{ category.name }}</h3>

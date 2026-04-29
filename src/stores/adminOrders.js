@@ -13,24 +13,17 @@ export const useAdminOrdersStore = defineStore('adminOrders', {
   actions: {
 
     async fetchOrders() {
-      this.loading = true
-
       const res = await axios.get(`/admin/orders`)
-
       this.orders = res.data.data
       this.pagination = res.data.meta
-
-      this.loading = false
     },
     async fetchOrder(id) {
-
-  this.loading = true
 
   const res = await axios.get(`/admin/orders/${id}`)
 
   this.order = res.data
 
-  this.loading = false
+ 
 },
 
   async updateStatus(id, status) {

@@ -189,6 +189,7 @@ const register = async () => {
     error.value = err.response?.data?.message || "حدث خطأ"
     console.error(err)
     showToast('حدث خطأ أثناء إنشاء الحساب ❌', 'error')
+    return ;
   }
 }
 </script>

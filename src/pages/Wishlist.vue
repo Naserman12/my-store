@@ -13,9 +13,9 @@ const loading = ref(true)
 const loadWishlist = async () => {
   try {
     const res = await api.get('/wishlist')
-    wishlist.value = res.data
+    wishlist.value = res.data.data || res.data || []
   } catch (e) {
-    console.log(e)
+    console.log(e.response || e)
   } finally {
     loading.value = false
   }
@@ -47,7 +47,6 @@ onMounted(() => {
     <div v-if="loading" class="text-center">
       جاري التحميل...
     </div>
-
     <!-- غير مسجل -->
     <div v-else-if="!auth.isLoggedIn" class="text-center space-y-4">
 

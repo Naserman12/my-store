@@ -17,9 +17,10 @@ import AdminDashboard from '../pages/admin/AdminDashboard.vue'
 import Wishlist from "../pages/Wishlist.vue";
 import Profile from "../pages/auth/Profile.vue";
 import AdminOrders from "../pages/admin/AdminOrders.vue";
+import Payment from "../components/checkout/Payment.vue";
+import Notifications from "../components/notifications.vue";
 
 const routes = [
-  { path: '/profile', component: Profile, meta: { requiresAuth: true } },
   { path:'/wishlist', component: Wishlist},
   { path:'/admin/orders/:id', component:()=>import('../pages/admin/OrderDetails.vue')},
   { path: '/admin', name: 'admin', component: AdminDashboard, },
@@ -34,12 +35,22 @@ const routes = [
   { path: "/categories", name: "categories", component: Categories },
   { path: "/category/:id", name: "category", component: Category },
   { path: '/product/:id', name: 'product', component: ShowProduct },
+  { path: '/admin/products', name: 'AdminProducts',component: AdminProducts,},
   { path: '/cart', component: Cart },
   { path: '/search', name: 'search', component: Search },
   { path: '/add-product', name: 'add-product', component: AddProduct },
-  { path: '/admin/products', name: 'AdminProducts',component: AdminProducts,},
   { path: '/login', name: 'login', component: Login },
-  { path: '/register', name: 'register', component: Register }
+  { path: '/notifications', name: 'notifications', component: Notifications },
+  { path: '/register', name: 'register', component: Register },
+  { path: '/profile', component: Profile, meta: { requiresAuth: true } },
+  { path: '/payment/:id', name: 'payment', component: Payment, meta: { requiresAuth: true }},
+  {
+  path: "/invoice/:id",
+  name: "invoice",
+  component: () => import("../pages/InvoicePage.vue"),
+  meta: { requiresAuth: true }
+}
+
 ];
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

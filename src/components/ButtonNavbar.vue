@@ -13,7 +13,16 @@
                </router-link>
                <router-link active-class="underline underline-offset-4 bg-gray-600" to="/cart" class=" flex flex-col items-center bg-gray-500 text-amber-50 hover:bg-gray-600 rounded-2xl p-1" >
                   <i class=" fas fa-shopping-cart text-xl"></i>
-                   <span class=" absolute -top-1- -right-2- bg-red-500 text-amber-50 text-sm font-bold py-0.5 px-2 rounded-full">3</span>
+                   <!-- <span class=" absolute -top-1- -right-2- bg-red-500 text-amber-50 text-sm font-bold py-0.5 px-2 rounded-full"> -->
+                     <div class="relative">
+                  <i class="fas fa-shopping-cart text-xl"></i>
+
+                  <span v-if="cartCount"
+                        class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full">
+                     {{ cartCount }}
+                  </span>
+                  </div>
+               <!-- </span> -->
                   <span class=" text-sm">السلة</span>
                </router-link>
                <router-link active-class="underline underline-offset-4 bg-gray-600" to="/wishlist" class=" flex flex-col items-center bg-gray-500 text-amber-50 hover:bg-gray-600 rounded-2xl p-1" >
@@ -29,6 +38,14 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { useDarkMode } from "../components/useDarkMode";
+import api from "../api/api"
 const {darkMode, toggleMode} = useDarkMode();
+
+const cartCount = ref(0)
+const loadCartCount = async () => {
+  const res = await api.get("/cart")
+  cartCount.value = res.data.items.length
+}
 </script>

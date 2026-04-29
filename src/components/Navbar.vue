@@ -1,6 +1,7 @@
 <template>
     <div>
         <nav  :class="darkMode ? 'bg-emerald-900 text-amber-50' : 'bg-emerald-50 text-emerald-700'" class="shadow-md sticky top-0 z-50 justify-between items-center transition-colors duration-300">
+        
             <div class=" contener mx-auto px-4 py-3 flex items-center justify-between">
                 <!-- روابط التنقل -->
                 <ul class="hidden md:flex items-center gap-6 font-medium ">
@@ -9,10 +10,15 @@
                     <li><router-link title="من نحن" active-class="underline underline-offset-4" to="/About" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="fas fa-user ml-3"></router-link></li>
                     <li><router-link title="اتصل بنا" active-class="underline underline-offset-4" to="/Contact" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="fas fa-phone ml-3"></router-link></li>
                     <li><router-link title="حسابي" active-class="underline underline-offset-4" to="/profile" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="fas fa-user ml-3"></router-link></li>
-                          <router-link to="/wishlist">
-  ❤️
-                </router-link>
-                <logout-btn />
+                    <router-link to="/wishlist">
+                        ❤️
+                    </router-link>
+                    <div v-if="user" >
+                        <logout-btn  />
+                    </div>
+                    <div v-else>
+                    <li><router-link title="تسجيل الدخول" active-class="underline underline-offset-4" to="/login" :class="darkMode ? '' : 'hover:bg-emerald-100 hover:text-emarale-500'" class="text-gray-100 bg-gray-500 p-0.5 font-bold underline"> تسجيل الدخول</router-link></li>
+                </div>
                     </ul>
                 <!-- إيقونة السلة -->
                  <div class=" felx items-center gap-4 right-0">
@@ -30,11 +36,61 @@
                     </button>
                 </div> -->
                 <!-- الاشعارات -->
-           
-                     <router-link to="/" class="p-2 rounded-lg ">
-                        <i title="الإشعارات" class="fas fa-bell"></i>
-                       <span class="absolute top-3 right-4- bg-red-500 text-amber-50 text-sm font-bold py-0.5 px-1 rounded-full">3</span>
+                <div class="relative">
+
+                <!-- زر الجرس -->
+                <div class="cursor-pointer relative" @click="open = !open">
+                    🔔
+
+                    <span
+                    v-if="unreadCount > 0"
+                    class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full"
+                    >
+                    {{ unreadCount }}
+                    </span>
+                </div>
+
+                <!-- Dropdown -->
+                <div v-if="open"
+                    class="absolute right-0 mt-2 w-80 shadow-lg rounded-lg z-50"
+                    :class="darkMode ? 'bg-gray-800 text-white' : 'bg-white'">
+
+                    <div class="p-3 border-b font-bold">
+                    الإشعارات
+                    </div>
+
+                    <div v-if="notifications.length === 0"
+                        class="p-3 opacity-70">
+                    لا توجد إشعارات
+                    </div>
+
+                    <div v-for="n in notifications.slice(0,5)"
+                        :key="n.id"
+                        @click="markAsRead(n)"
+                        class="p-3 border-b cursor-pointer"
+                        :class="[
+                        darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50',
+                        n.is_read ? 'opacity-60' : ''
+                        ]">
+
+                    <p class="font-bold text-sm">{{ n.title }}</p>
+                    <p class="text-xs opacity-70">{{ n.message }}</p>
+                    </div>
+
+                    <!-- زر عرض الكل -->
+                    <div class="p-2 text-center">
+                    <router-link to="/notifications" class="text-sm underline">
+                        عرض كل الإشعارات
                     </router-link>
+                    </div>
+
+                </div>
+
+                </div>
+                     <!-- <router-link to="/" class="p-2 rounded-lg "  @click="open = !open">
+                        <i title="الإشعارات" class="fas fa-bell"></i>
+                       <span v-if="unreadCount > 0" class="absolute top-3 right-4- bg-red-500 text-amber-50 text-sm font-bold py-0.5 px-1 rounded-full"> {{ unreadCount }}</span>
+                    </router-link> -->
                   
                 <!-- Mode Button -->
                 <button title="تغير الوان الخلفية" @click="toggleMode" class=" text-lg text-amber-50 rounded-full ">
@@ -149,18 +205,56 @@ import searchBtn from "./searchBtn.vue";
 import Search from "../pages/Search.vue";
 import LogoutBtn from "../pages/auth/LogoutBtn.vue";
 import { useDarkMode } from "./useDarkMode.js";
+import api from "../api/api.js";
+
+const open = ref(false)
+const user = ref(null)
+const notifications = ref([])
+const unreadCount = ref(0)
+
+// const loadNotifications = async () => {
+//   const res = await api.get('/notifications')
+//   notifications.value = res.data
+//   unreadCount.value = res.data.filter(n => !n.is_read).length
+// }
+const loadUser = async () => {
+  try {
+    const res = await api.get("/auth/user")
+    user.value = res.data
+    form.customer_name = res.data.name
+    form.customer_phone = res.data.phone
+    form.customer_email = res.data.email
+  } catch {}
+}
+const loadNotifications = async () => {
+  try {
+    const res = await api.get("/notifications")
+    console.log("NOTIF RESPONSE:", res.data)
+    unreadCount.value = res.data
+  } catch (e) {
+    console.log("FULL ERROR:", e.response?.data)
+  }
+}
+
+onMounted(() => {
+  loadNotifications()
+  loadUser()
+})
 
 const {darkMode, toggleMode} = useDarkMode();
 // القائمة الجانبية
 const target = ref(null); 
-onClickOutside(target, () => {
-    isOpen.value = false;
-})
 const isOpen = ref(false);
 const toggleMenu = () => {
     isOpen.value = !isOpen.value;
+    open.value = !open.value;
+
 }
 
+onClickOutside(target, () => {
+    isOpen.value = false;
+    open.value = false;
+})
 // categoties
 const categoriesOpen = ref(false);
 const toggleCategories = () => {

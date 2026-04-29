@@ -4,7 +4,7 @@
       <div class="m-1 rounded-lg flex flex-col items-center">
        <!-- Wishlist Button  -->
       <button
-      @click.stop="toggleWishlist(product)"
+      @click="toggleWishlist(product.id)"
       class="absolute top-2 left-2 z-10
       bg-white/80 backdrop-blur
       rounded-full p-2 shadow
@@ -36,7 +36,7 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useDarkMode } from './useDarkMode';
 import { useCartStore } from '../stores/cart';
@@ -45,12 +45,14 @@ import { showToast } from '../stores/toast';
 import { useAuthStore } from '../stores/auth';
 import cartApi from "../api/cart";
 import { useWishlistStore } from '../stores/wishlist'
+import api from '../api/api';
 
 const {darkMode, toggleMode} = useDarkMode();
 const router = useRouter()
 const cart =useCartStore()
 const wishlist = useWishlistStore()
 const auth = useAuthStore()
+
 
 // نستقبل prop من  الأب
 const props = defineProps({
@@ -72,13 +74,28 @@ const addToCart = async (id) => {
     showToast('حدث خطأ', 'error');
   }
 }
-const toggleWishlist = async (product) => {
+const toggleWishlist = async (productId) => {
   if (!auth.isLoggedIn) {
     showToast('يجب تسجيل الدخول أولاً', 'error')
     return
   }
-
-  await wishlist.toggle(product.id)
+  try {
+     await wishlist.toggle(productId);
+  } catch (e) {
+    console.error('Error toggling wishlist:', e.response || e);
+    showToast('حدث خطأ', 'error');
+  }
+ 
+  // await api.post('/wishlist/toggle', {
+  //   product_id: product.id
+  // })
+  // // await wishlist.toggle(product.id)
+  //  if (wishlist.isInWishlist(product.id)) {
+    //   await api.delete(`/wishlist/remove/${product.id}`)
+  //   showToast('تم إزالة المنتج من المفضلة')
+  // } else {
+  //   showToast('تم إضافة المنتج إلى المفضلة')
+  // }
 }
 // function addToCart(product) {
 //     if (!product) return;

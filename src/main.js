@@ -6,6 +6,7 @@ import router from './router'
 import ScrollReveal from 'scrollreveal'
 import '@fortawesome/fontawesome-free/css/all.css'
 import lazy from './directives/lazy'
+import "leaflet/dist/leaflet.css"
 // import './firebase'
 
 const app = createApp(App);

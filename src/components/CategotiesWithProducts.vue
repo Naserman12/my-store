@@ -8,13 +8,31 @@ import { showToast } from '../stores/toast';
 import  productsApi from '../api/productsApi';
 import cartApi from "../api/cart";
 import api from "../api/api";
+import { useWishlistStore } from '../stores/wishlist'
+import { useAuthStore } from '../stores/auth';
 
+const auth = useAuthStore()
+const wishlist = useWishlistStore();
 const props = defineProps({
     product: {
         type: Object,
-        required: true
+        required: true,
+        default: () => ({})
     }
 });
+
+const toggleWishlist = async (productId) => {
+  if (!auth.isLoggedIn) {
+    showToast('يجب تسجيل الدخول أولاً', 'error')
+    return
+  }
+  try {
+     await wishlist.toggle(productId);
+  } catch (e) {
+    console.error('Error toggling wishlist:', e.response || e);
+    showToast('حدث خطأ', 'error');
+  }
+}
 
 const {darkMode, toggleMode} = useDarkMode();
 const router = useRouter();
@@ -34,7 +52,7 @@ onMounted(async () => {
             selectedCategory.value = categoriesAPI.value[0];
         }
     } catch (e) {
-        console.error("API ERROR:", e);
+        console.error("API ERROR:", e.response || e);
     } finally {
         loading.value = false;
     }
@@ -48,8 +66,8 @@ const selectCategory =  (cat) => {
 }
 
 // التنقل للتفاصيل
-const goToDetails = (productId) => {
-  router.push({ name: "product", params: {  product_id: productId } });
+function goToDetails(id) {
+  router.push({ name: "product", params: { id } });
 }
 
 
@@ -62,7 +80,7 @@ const addToCart = async (productId) => {
         showToast('تمت إضافة المنتج للسلة ✓');
     } catch (e) {
         console.error(e.response || e);
-        showToast('حدث خطأ أثناء الإضافة', 'error');
+        showToast("❌ صار خطأ، لا تخاف مو منك 😅");
     } finally {
         adding.value = false;
     }
@@ -109,13 +127,28 @@ const getPrimaryImage = (product) => {
                <div v-if="selectedCategory && previewProducts.length > 0" class="mt-8">
                   <h2 class=" text-xl font-bold mb-4 text-center">{{ selectedCategory.name }}</h2>
                   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                      <div v-for="product in  previewProducts" :key="product.id" class=" rounded-xl shadow p-3 text-center hover:scale-105 transition">
+                      <div v-for="product in  previewProducts" :key="product.id" class="relative  rounded-xl shadow p-3 text-center hover:scale-105 transition">
+                                          <button
+      @click="toggleWishlist(product.id)"
+      class="absolute top-2 left-2 z-10
+      bg-white/80 backdrop-blur
+      rounded-full p-1 shadow
+      hover:scale-110 transition"
+    >
+      <i 
+        class="fas fa-heart"
+        :class="wishlist.isInWishlist(product.id) 
+          ? 'text-red-500' 
+          : 'text-gray-400'"
+      ></i>
+    </button>
                           <img 
-                           :src="product.iamge"
+                          @click="goToDetails(product.id)"
+                           :src="product.iamges?.[0]"
                            @error="$event.target.src = '/fallback.png'"
                            class="h-24 mx-auto mb-4 opacity-0 transition duration-700" 
                            alt="product image">
-          
+                        
                           <h3 class=" text-sm font-semibold">{{ product.name }}</h3>
                           <p class=" text-sm ">{{ product.price }} ر.س</p>
                           <button title="عرض تفاصيل المنتج" @click="goToDetails(product.id)" :class="darkMode ? 'bg-emerald-50 hover:bg-emerald-200 text-gray-700' : 'bg-emerald-500 hover:bg-emerald-600 text-emerald-50'" class="px-3 py-1 rounded m-1"><i class="fas fa-eye"></i></button>

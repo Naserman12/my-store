@@ -1,257 +1,164 @@
 <template>
-  <div class="p-6 max-w-5xl mx-auto">
+  <div :class="darkMode ? 'dark bg-gray-900 text-white' : 'bg-gray-100 text-black'" class="max-w-6xl mx-auto p-6" >
 
-    <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">
-      🛒 ملخص الطلب
+    <!-- العنوان -->
+    <h1 class="text-3xl font-bold text-center mb-10">
+      🛒 سلة التسوق
     </h1>
 
-    <div class="grid md:grid-cols-2 gap-6">
+    <div class="grid md:grid-cols-3 gap-6">
 
-      <!-- قائمة المنتجات -->
-      <div class="bg-white shadow-lg rounded-xl p-5">
-        <h2 class="text-xl font-bold mb-4 text-gray-700">المنتجات</h2>
+      <!-- 🛒 المنتجات -->
+      <div class="md:col-span-2 space-y-4">
 
-        <template v-if="loading">
-          <skeleton-product v-for="n in 4" :key="n" />
-        </template>
-
-        <div v-if="cart.length" class="space-y-4">
-
-          <div
-            v-for="item in cart"
-            :key="item.id"
-            class="border rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition"
-          >
-            <div class="flex justify-between items-start">
-
-              <div class="flex-1">
-                <p class="font-bold text-lg text-gray-800">{{ item.product.name }}</p>
-
-                <p class="text-gray-600 mt-1">الكمية: {{ item.quantity }}</p>
-                <p class="text-gray-600">السعر الأساسي: {{ item.product.price }} ر.س</p>
-                <p v-if="item.product.discount" class="text-gray-600">الخصم: {{ item.product.discount }}%</p>
-                <p v-if="item.product.sale_price" class="text-emerald-700 font-bold">السعر بعد الخصم: {{ item.product.sale_price }} ر.س</p>
-
-                <!-- التحكم بالكمية -->
-                <div class="flex items-center mt-4">
-                  <span class="font-semibold ml-3">الكمية:</span>
-
-                  <div class="flex items-center border rounded-md overflow-hidden bg-white shadow-sm">
-                    <button
-                      @click="cartStore.decreaseQuantity(item.id)"
-                      class="px-3 py-1 bg-red-100 hover:bg-red-400 hover:text-white transition"
-                    >
-                      <i class="fas fa-minus"></i>
-                    </button>
-
-                    <span class="px-4 py-2 w-12 text-center">{{ item.quantity }}</span>
-
-                    <button
-                      @click="cartStore.increaseQuantity(item.id)"
-                      class="px-3 py-1 bg-emerald-100 hover:bg-emerald-400 hover:text-white transition"
-                    >
-                      <i class="fas fa-plus"></i>
-                    </button>
-                  </div>
-
-                  <button
-                    @click="handleDelete(item.id)"
-                    class="text-gray-600 mr-1 hover:bg-red-400 hover:text-white px-1 py-1 rounded transition"
-                  >
-                    <i class="fas fa-trash m-1"></i> 
-                  </button>
-                </div>
-              </div>
-
-            </div>
-        </div>
-        <p class="text-xl font-bold text-gray-800 mt-4">
-          الإجمالي: {{ totalPrice }} ر.س
-        </p>
-
-
-          <button
-            @click="goBack"
-            class="mt-4 bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg"
-          >
-            اكمل التسوق
-          </button>
-
+        <div v-if="loading">
+          <skeleton-product v-for="n in 3" :key="n" />
         </div>
 
-        <p v-if="cart.length < 1" class="text-center text-gray-500">
-          السلة فارغة.
-        </p>
-      </div>
-
-      <!-- نموذج الدفع -->
-      <div class="bg-white shadow-lg rounded-xl p-6">
-        <h2 class="text-2xl font-bold mb-4 text-gray-800">معلومات الدفع</h2>
-
-        <form @submit.prevent="nextStep" class="space-y-4">
-
+        <div
+          v-for="item in cartItems"
+          :key="item.id"
+          class="bg-white rounded-xl shadow p-4 flex justify-between items-center"
+        >
           <div>
-            <label class="font-semibold">البريد الإلكتروني</label>
-            <input
-              v-model="checkout.shipping.email"
-              placeholder="example@email.com"
-              class="w-full border p-2 rounded mt-1"
-            />
-          </div>
+            <h2 class="font-bold text-lg">{{ item.product.name }}</h2>
+            <p class="text-gray-500 text-sm mt-1">
+              {{ item.product.price }} ر.س
+            </p>
 
-          <!-- العنوان -->
-          <div>
-            <label class="font-semibold">العنوان</label>
-
-            <div
-              v-if="checkout.shipping.address && !showAddressForm"
-              class="bg-gray-100 p-3 rounded flex justify-between items-center mt-1"
-            >
-              <span>{{ checkout.shipping.address }}</span>
-              <button @click="toggleAddress" class="text-emerald-600 font-semibold">
-                تعديل
-              </button>
-            </div>
-
-            <button
-              v-if="!showAddressForm && !checkout.shipping.address"
-              @click="toggleAddress"
-              type="button"
-              class="text-emerald-600 font-semibold mt-1"
-            >
-              ➕ إضافة عنوان
-            </button>
-
-            <div v-if="showAddressForm" class="space-y-3 mt-2">
-              <input
-                v-model="checkout.shipping.address"
-                placeholder="العنوان"
-                class="w-full border p-2 rounded"
-              />
+            <div class="flex items-center mt-3 gap-2">
 
               <button
-                type="button"
-                @click="toggleAddress"
-                class="bg-emerald-600 text-white px-3 py-2 rounded"
-              >
-                حفظ العنوان
-              </button>
+                @click="decrease(item.id)"
+                class="px-3 py-1 bg-gray-200 rounded hover:bg-red-400 hover:text-white"
+              >-</button>
+
+              <span class="px-3">{{ item.quantity }}</span>
+
+              <button
+                @click="increase(item.id)"
+                class="px-3 py-1 bg-gray-200 rounded hover:bg-green-400 hover:text-white"
+              >+</button>
+
             </div>
           </div>
 
-          <!-- القسيمة -->
-          <div>
-            <label class="font-semibold">القسيمة (اختياري)</label>
-            <input
-              v-model="checkout.shipping.coupon"
-              class="w-full border p-2 rounded mt-1"
-            />
-          </div>
-
-          <!-- الشحن -->
-          <div>
-            <h3 class="font-bold text-lg mb-2">🚚 خيارات الشحن</h3>
-
-            <div class="space-y-2">
-              <label class="flex items-center gap-2">
-                <input type="radio" value="free" v-model="checkout.shipping.shippingMethod">
-                شحن مجاني (3-5 أيام)
-              </label>
-
-              <label class="flex items-center gap-2">
-                <input type="radio" value="mrsool" v-model="checkout.shipping.shippingMethod">
-                مرسول (سريع)
-              </label>
-
-              <label class="flex items-center gap-2">
-                <input type="radio" value="store" v-model="checkout.shipping.shippingMethod">
-                استلام من متجر معتمد
-              </label>
-
-              <label class="flex items-center gap-2">
-                <input type="radio" value="ourStore" v-model="checkout.shipping.shippingMethod">
-                استلام من متجرنا (موصى به)
-              </label>
-            </div>
-          </div>
+          <!-- حذف -->
           <button
-            type="submit"
-            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg text-lg font-semibold"
+            @click="remove(item.id)"
+            class="text-red-500 hover:bg-red-100 px-3 py-2 rounded"
           >
-            إتمام الطلب
+            🗑
           </button>
-
-        </form>
-
-        <!-- طرق الدفع -->
-        <div class="mt-6 border-t pt-4">
-          <h3 class="font-semibold mb-3">💳 طرق الدفع المدعومة</h3>
-
-          <div class="flex gap-4 flex-wrap">
-            <img src="https://img.icons8.com/color/48/visa.png" />
-            <img src="https://img.icons8.com/color/48/mastercard.png" />
-            <img src="https://img.icons8.com/color/48/amex.png" />
-            <img src="https://img.icons8.com/color/48/discover.png" />
-            <img src="https://img.icons8.com/color/48/apple-pay.png" />
-          </div>
         </div>
+
+        <p v-if="!cartItems.length" class="text-center text-gray-400">
+          السلة فارغة 😢
+        </p>
+
+      </div>
+
+      <!-- 💰 Summary -->
+      <div class="bg-white shadow-xl rounded-xl p-6 h-fit">
+
+        <h2 class="text-xl font-bold mb-4">ملخص الطلب</h2>
+
+        <div class="space-y-2 text-gray-600">
+
+          <div class="flex justify-between">
+            <span>عدد المنتجات</span>
+            <span>{{ cartItems.length }}</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span>الإجمالي</span>
+            <span class="font-bold text-black">{{ total }} ر.س</span>
+          </div>
+
+        </div>
+
+        <button
+          @click="goToCheckout"
+          class="w-full mt-6 bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition"
+        >
+          متابعة الطلب →
+        </button>
+
+        <button
+          @click="goBack"
+          class="w-full mt-3 border py-2 rounded-lg"
+        >
+          ← متابعة التسوق
+        </button>
 
       </div>
 
     </div>
+
   </div>
 </template>
 
-
 <script setup>
-        import { useCartStore } from '../stores/cart';
-        import {ref, computed, onMounted } from 'vue';
-        import { useRouter } from 'vue-router';
-        import { useDarkMode } from '../components/useDarkMode';
-        import { showToast } from '../stores/toast';
-        import { useCheckoutStore } from '../stores/checkout'
-        import SkeletonProduct from '../components/SkeletonProduct.vue';
-        
-        import cartApi from "../api/cart";
+import { ref, onMounted } from "vue"
+import { useRouter } from "vue-router"
+import cartApi from "../api/cart"
+import { useAuthStore } from "../stores/auth"
+import { showToast } from "../stores/toast"
+import SkeletonProduct from "../components/SkeletonProduct.vue"
+import { useDarkMode } from "../components/useDarkMode"
 
-        
-        const checkout = useCheckoutStore()
-        const {darkMode, toggleMode} = useDarkMode();
-        const cartStore = useCartStore();
-        const router = useRouter();
-        // const cart = computed(()=> cartStore.cart)
-        const cart = ref(1);
-        const loading = ref(true)
-        const totalPrice = ref(0);
-        const loadCart = async () => {
-        loading.value = true;
-        const res = await cartApi.getCart();
-        console.log("Cart data loaded:", res.data);
-        cart.value = res.data.items;  // Assuming the API returns an object with an 'items' array
-        totalPrice.value = res.data.total; // Assuming the API returns the total price
-        loading.value = false;
-        };
-        onMounted(loadCart);
+const { darkMode } = useDarkMode()
 
-        const showAddressForm = ref(false)
-        function toggleAddress() {
-        showAddressForm.value = !showAddressForm.value
-        }
-        function handleDelete(id) {
-            if (typeof cartStore.confirmDelete === 'function') {
-                cartStore.confirmDelete(id);
-                return;
-            }
-            cartStore.removeFromCart(id);
-        }
-        function nextStep() {
-              // تحديد الخطوة المطلوبة
-        checkout.step = 1
-        checkout.nextStep()
-        // الانتقال لصفحة checkout
-        router.push('/checkout')
-        }
-       function goBack(){
-        router.go(-1);  // الرجوع للصفحة السابقة
-       }
+const router = useRouter()
+const auth = useAuthStore()
+
+const cartItems = ref([])
+const total = ref(0)
+const loading = ref(true)
+
+const loadCart = async () => {
+  try {
+    const res = await cartApi.getCart()
+    console.log('Cart loading...', res.data);
+    cartItems.value = res.data.items
+    total.value = res.data.total
+  } catch (e) {
+    console.log(e.response || e)
+  }
+
+  loading.value = false
+}
+
+const increase = async (id) => {
+  await cartApi.updateQuantity(id, 2) // عدلها حسب منطقك
+  loadCart()
+}
+
+const decrease = async (id) => {
+  await cartApi.updateQuantity(id, 1)
+  loadCart()
+}
+
+const remove = async (id) => {
+  await cartApi.remove(id)
+  loadCart()
+}
+
+const goToCheckout = () => {
+
+  if (!auth.isLoggedIn) {
+    showToast("⚠️ لازم تسجل دخول أول")
+    localStorage.setItem("redirect_after_login", "/checkout")
+    router.push("/login")
+    return
+  }
+
+  router.push("/checkout")
+}
+
+const goBack = () => {
+  router.go(-1)
+}
+
+onMounted(loadCart)
 </script>

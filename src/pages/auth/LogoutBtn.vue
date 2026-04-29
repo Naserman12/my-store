@@ -18,7 +18,6 @@ const logout = async () => {
   try {
     await api.post("/auth/logout")
     localStorage.removeItem("token", null)
-    localStorage.removeItem("user", null)
     showToast("تم تسجيل الخروج بنجاح")
     router.push("/login")
   } catch (err) {
